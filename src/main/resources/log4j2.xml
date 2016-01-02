@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+	    <Console name="STDOUT" target="SYSTEM_OUT">
+   	 		<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%t] %logger{36} | %m%n"/>
+    	</Console>
+    </Appenders>
+    
+    <Loggers>
+    
+    <Logger name="org.apache.log4j.xml" level="trace"/>
+    <Logger name="com.ec.nr.watcher.SpreadsheetWatcher" level="debug"/>
+    <Logger name="com.ec.nr.watcher.MP3LandingPadWatcher" level="debug"/>
+     <Logger name="com.ec.nr.sheets.creds.SpeakerSpreadsheet" level="debug"/>
+    
+    <Root level="trace">
+    	<AppenderRef ref="STDOUT"/>
+    </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,59 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+ 
+    <bean id="WatcherManager" class="com.ec.nr.watcher.WatcherManager" init-method="startWatchers">
+		    <property name="ssWatcher" ref="SpreadsheetWatcher" />
+		    <property name="landingpadWatcher" ref="MP3Watcher" />
+		    <property name="workQManager" ref="WorkQManager" />
+    </bean>
+ 
+	<bean id="MP3Watcher" class="com.ec.nr.watcher.MP3LandingPadWatcher">
+		<property name="pathToWatch" value="/media/pi/remainder/NR/JavaTesting/LandingPad" />
+		<property name="workQ" ref="WorkQManager" />
+	</bean>
+	
+	<bean id="SpreadsheetWatcher" class="com.ec.nr.watcher.SpreadsheetWatcher">
+		<property name="workQ" ref="WorkQManager" />
+		<property name="speakerSS" ref="SpeakerSpreadsheet" />
+		<property name="sleepTimeInterval" value="10000" />
+	</bean>
+	
+	<bean name="WorkQThreadQExecutor" class="java.util.concurrent.Executors" factory-method="newFixedThreadPool">
+		<constructor-arg value="5"></constructor-arg>
+	</bean>
+	
+	<bean name="WorkQManager" class="com.ec.nr.workq.WorkQManager">
+		<property name="executor" ref="WorkQThreadQExecutor" />
+	</bean>
+	
+	<bean name="credentialDirectory" class="java.io.File">
+		<constructor-arg>
+			<value>/home/ubuntu/oauth2_nr2015</value>
+		</constructor-arg>
+	</bean>
+			
+	<bean name="SpeakerSpreadsheet" class="com.ec.nr.sheets.creds.SpeakerSpreadsheet" init-method="initialize">
+		<property name="applicationName" value="NoRegrets-MP3/1.0" />
+		<property name="credentialDirectory" ref="credentialDirectory" />
+		<property name="userInfo" value="/userInfo.json" />
+	</bean>
+	
+	<!-- <bean name="defaultMP3AudioReceivedRunnable" class="com.ec.nr.runners.NewMP3AudoReceivedRunnable">
+		<property name="speakerData" ref="SpeakerSpreadsheet" />
+	</bean>
+	-->
+	<bean name="audioRunnersBase" class="com.ec.nr.runners.AudioRunnersBase">
+		<property name="scriptsDirectory" value="/media/pi/remainder/NR/JavaTesting/Scripts" />
+		<property name="workingAudioDirectory" value="/media/pi/remainder/NR/JavaTesting/SysWorking" />
+		<property name="logsDirectory" value="/media/pi/remainder/NR/JavaTesting/Logs" />
+		<property name="landingPadDirectory" value="/media/pi/remainder/NR/JavaTesting/LandingPad" />
+		<property name="dataDirectory" value="/media/pi/remainder/NR/JavaTesting/Data" />
+		<property name="finalAudioDirectory" value="/media/pi/remainder/NR/JavaTesting/SysScrubbed" />
+		
+		<property name="speakerSS" ref="SpeakerSpreadsheet" />
+		<property name="workQManager" ref="WorkQManager" />
+	</bean>
+  
+</beans>
