@@ -1,0 +1,1 @@
+This project is specific to the no-regrets mens conference.  the dependencies are lame and sox
