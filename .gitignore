@@ -78,5 +78,8 @@ hs_err_pid*
 home/
 lib/
 src/main/resources/userInfo.json
-
+nr*.mp3
+src/test/logs
+src/test/working
+src/test/final
 

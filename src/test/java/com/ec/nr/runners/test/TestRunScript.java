@@ -18,20 +18,34 @@ public class TestRunScript {
 	
 	
 	@Test
-	public void testRunScript() {
-		ScriptRunner convertToMonoRunner = runScriptFactory.getScriptRunner("convertToMono.sh", "convertToMono", "nrSilence");
-		convertToMonoRunner.run();
+	public void testQuiet() {
+		ScriptRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrQuiet-sample");
+		convertToMono.run();
+		ScriptRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrQuiet-sample");
+		amplify.run();
+		ScriptRunner removeSilence = runScriptFactory.getScriptRunner("Convert To Mono Complete", "nrQuiet-sample");
+		removeSilence.run();
+		ScriptRunner addLeadIn = runScriptFactory.getScriptRunner("Amplify Complete", "nrQuiet-sample");
+		addLeadIn.run();
+		ScriptRunner tagMP3 = runScriptFactory.getScriptRunner("Add Lead In Complete", "nrQuiet-sample");
+		tagMP3.run();
 	}
 	
 	@Test
-	public void testRemoveSilence() {
-		ScriptRunner removeSilenceRunner = runScriptFactory.getScriptRunner("removeSilence.sh", "removeSilence.sh", "nrSilence");
+	public void testSilence() {
+		ScriptRunner removeSilenceRunner = runScriptFactory.getScriptRunner("Convert To Mono Complete", "");
 		removeSilenceRunner.run();
 	}
 	
 	@Test
-	public void testAmplify() {
-		ScriptRunner amplifyRunner = runScriptFactory.getScriptRunner("amplify.sh", "amplify.sh", "nrQuiet");
+	public void testClassic() {
+		ScriptRunner amplifyRunner = runScriptFactory.getScriptRunner("Remove Silence Complete", "");
+		amplifyRunner.run();
+	}
+	
+	@Test
+	public void testCrazy() {
+		ScriptRunner amplifyRunner = runScriptFactory.getScriptRunner("Remove Silence Complete", "");
 		amplifyRunner.run();
 	}
 	
