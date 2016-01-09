@@ -40,7 +40,7 @@ public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 					
 		try {
 			logger.info("About to update the spreadsheet to 'Ready'...");
-			HashMap<String, String> data = getSpeakerSS().getAudioDetails(getId());
+			HashMap<String, String> data = null;// getSpeakerSS().getAudioDetails(getId());
 			if (data.get("mp3State") == null || data.get("mp3State").equalsIgnoreCase("")) {
 				getSpeakerSS().updateField(getId(), "mp3State", "Ready");
 			} else {

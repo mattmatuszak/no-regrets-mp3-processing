@@ -2,7 +2,7 @@
 
 echo ""
 
-while getopts ":s:t:at:al:ar:i" opt; do
+while getopts ":s:t:e:l:r:i:" opt; do
   case $opt in
     s)
       sourceAudio=$OPTARG
@@ -10,13 +10,13 @@ while getopts ":s:t:at:al:ar:i" opt; do
     t)
       targetAudio=$OPTARG
       ;;
-    at)
+    e)
       audioTitle=$OPTARG
       ;;
-    al)
+    l)
       audioAlbum=$OPTARG
       ;;
-    ar)
+    r)
       audioArtist=$OPTARG
       ;;
     i)

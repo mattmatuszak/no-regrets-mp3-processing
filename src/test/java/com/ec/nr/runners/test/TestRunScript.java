@@ -1,22 +1,40 @@
 package com.ec.nr.runners.test;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.TestContext;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AbstractTestExecutionListener;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import com.ec.nr.NREnvironment;
 import com.ec.nr.NRMP3AppConfig;
 import com.ec.nr.runners.script.ScriptRunner;
 import com.ec.nr.runners.script.RunScriptFactory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(NRMP3AppConfig.class)
-public class TestRunScript {
+@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TestRunScript.class })
+public class TestRunScript extends AbstractTestExecutionListener {
 
 	@Autowired RunScriptFactory runScriptFactory;
 	
-	
+	@Override
+	public void beforeTestClass(TestContext testContext) throws Exception {
+		super.beforeTestClass(testContext);
+		
+		NREnvironment env = testContext.getApplicationContext().getBean(NREnvironment.class);
+		
+		FileUtils.cleanDirectory(new File(env.WORKING_DIR));
+		FileUtils.cleanDirectory(new File(env.LOGS_DIR));
+	}
+
 	@Test
 	public void testQuiet() {
 		ScriptRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrQuiet-sample");

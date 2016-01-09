@@ -1,5 +1,6 @@
 package com.ec.nr.sheets.creds;
 
+import com.ec.nr.sheets.creds.SpreadsheetDataRow.Field;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -40,48 +41,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-/**
- * Command-line sample for the Google OAuth2 API described at <a
- * href="http://code.google.com/apis/accounts/docs/OAuth2Login.html">Using OAuth
- * 2.0 for Login (Experimental)</a>.
- *
- * @author Yaniv Inbar
- */
 @Service
 public class SpeakerSpreadsheet {
 
 	private static Logger logger = LogManager.getLogger(SpeakerSpreadsheet.class);
 
-	/**
-	 * Be sure to specify the name of your application. If the application name
-	 * is {@code null} or blank, the application will log a warning. Suggested
-	 * format is "MyCompany-ProductName/1.0".
-	 */
 	@Value( "${speaker.spreadsheet.appname}" )
-	private String applicationName;// = "NoRegrets-MP3/1.0";
+	private String applicationName;
 	@Value( "${speaker.spreadsheet.userInfo}" )
 	private String userInfo;
+	@Value( "${speaker.spreadsheet.name}" )
+	private String spreadsheetName;
+	@Value( "${speaker.spreadsheet.sheet}" )
+	private String sheetName;
 
-	/** Directory to store user credentials. */
-	@Autowired private java.io.File credentialDirectory;// =
-	// new java.io.File(System.getProperty("user.home"),
-	// ".store/oauth2_sample");
-	// new java.io.File("/home/ubuntu/oauth2_sample");
-
-	/**
-	 * Global instance of the {@link DataStoreFactory}. The best practice is to
-	 * make it a single globally shared instance across your application.
-	 */
+	@Autowired private java.io.File credentialDirectory;
+	
 	private FileDataStoreFactory dataStoreFactory;
-
-	/** Global instance of the HTTP transport. */
 	private HttpTransport httpTransport;
-
-	/** Global instance of the JSON factory. */
-	private final JsonFactory JSON_FACTORY = JacksonFactory
-			.getDefaultInstance();
-
-	/** OAuth 2.0 scopes. */
+	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private final List<String> SCOPES = Arrays.asList(
 			"https://www.googleapis.com/auth/userinfo.profile",
 			"https://www.googleapis.com/auth/userinfo.email",
@@ -96,8 +74,6 @@ public class SpeakerSpreadsheet {
 		// load client secrets
 		clientSecrets = GoogleClientSecrets.load(
 				JSON_FACTORY,
-				// new
-				// InputStreamReader(OAuth2Sample.class.getResourceAsStream("/client_secrets.json")));
 				new InputStreamReader(SpeakerSpreadsheet.class
 						.getResourceAsStream(userInfo)));
 
@@ -162,7 +138,7 @@ public class SpeakerSpreadsheet {
 				"https://spreadsheets.google.com/feeds/spreadsheets/private/full");
 
 		SpreadsheetQuery query = new SpreadsheetQuery(SPREADSHEET_FEED_URL);
-		query.setTitleQuery("NR2015 MP3 Speaker Database");
+		query.setTitleQuery(spreadsheetName);
 		query.setTitleExact(true);
 		// Make a request to the API and get all spreadsheets.
 		// SpreadsheetFeed feed = service.getFeed(SPREADSHEET_FEED_URL,
@@ -204,7 +180,7 @@ public class SpeakerSpreadsheet {
 					"https://spreadsheets.google.com/feeds/spreadsheets/private/full");
 	
 			SpreadsheetQuery query = new SpreadsheetQuery(SPREADSHEET_FEED_URL);
-			query.setTitleQuery("NR2015 MP3 Speaker Database");
+			query.setTitleQuery(spreadsheetName);
 			query.setTitleExact(true);
 			// Make a request to the API and get all spreadsheets.
 			// SpreadsheetFeed feed = service.getFeed(SPREADSHEET_FEED_URL,
@@ -220,8 +196,8 @@ public class SpeakerSpreadsheet {
 	
 				for (WorksheetEntry sheet : sheets) {
 	
-					if (!sheet.getTitle().getPlainText().equalsIgnoreCase("Breakout")) {
-						logger.trace("ignoring sheet '" + sheet.getTitle().getPlainText() + "'...we only care about the Breakout");
+					if (!sheet.getTitle().getPlainText().equalsIgnoreCase(this.sheetName)) {
+						logger.trace("ignoring sheet '" + sheet.getTitle().getPlainText() + "'...we only care about the " + sheetName);
 					} else {
 						logger.trace("Looking at Sheet Name:" + sheet.getTitle().getPlainText());
 		
@@ -271,7 +247,7 @@ public class SpeakerSpreadsheet {
 					"https://spreadsheets.google.com/feeds/spreadsheets/private/full");
 	
 			SpreadsheetQuery query = new SpreadsheetQuery(SPREADSHEET_FEED_URL);
-			query.setTitleQuery("NR2015 MP3 Speaker Database");
+			query.setTitleQuery(spreadsheetName);
 			query.setTitleExact(true);
 			// Make a request to the API and get all spreadsheets.
 			// SpreadsheetFeed feed = service.getFeed(SPREADSHEET_FEED_URL,
@@ -287,7 +263,7 @@ public class SpeakerSpreadsheet {
 	
 				for (WorksheetEntry sheet : sheets) {
 	
-					if (!sheet.getTitle().getPlainText().equalsIgnoreCase("Breakout")) {
+					if (!sheet.getTitle().getPlainText().equalsIgnoreCase(sheetName)) {
 						logger.trace("ignoring sheet '" + sheet.getTitle().getPlainText() + "'...we only care about the Breakout");
 					} else {
 						logger.trace("Looking at Sheet Name:" + sheet.getTitle().getPlainText());
@@ -351,7 +327,7 @@ public class SpeakerSpreadsheet {
 					"https://spreadsheets.google.com/feeds/spreadsheets/private/full");
 	
 			SpreadsheetQuery query = new SpreadsheetQuery(SPREADSHEET_FEED_URL);
-			query.setTitleQuery("NR2015 MP3 Speaker Database");
+			query.setTitleQuery(spreadsheetName);
 			query.setTitleExact(true);
 			// Make a request to the API and get all spreadsheets.
 			// SpreadsheetFeed feed = service.getFeed(SPREADSHEET_FEED_URL,
@@ -367,7 +343,7 @@ public class SpeakerSpreadsheet {
 	
 				for (WorksheetEntry sheet : sheets) {
 	
-					if (!sheet.getTitle().getPlainText().equalsIgnoreCase("Breakout")) {
+					if (!sheet.getTitle().getPlainText().equalsIgnoreCase(sheetName)) {
 						logger.trace("ignoring sheet '" + sheet.getTitle().getPlainText() + "'...we only care about the Breakout");
 					} else {
 						logger.trace("Looking at Sheet Name:" + sheet.getTitle().getPlainText());
@@ -412,9 +388,9 @@ public class SpeakerSpreadsheet {
 		logger.trace("finished updating " + mp3NameToUpdate + " --> " + field + " : " + value + "...");
 	}
 	
-	public HashMap<String, String> getAudioDetails(String mp3ToRetrieve) {
+	public SpreadsheetDataRow getAudioDetails(String mp3ToRetrieve) {
 		logger.trace("getting audio details for " + mp3ToRetrieve + "...");
-		HashMap<String, String> data = new HashMap<String, String>();
+		SpreadsheetDataRow data = null;
 
 		try {
 		
@@ -426,7 +402,7 @@ public class SpeakerSpreadsheet {
 					"https://spreadsheets.google.com/feeds/spreadsheets/private/full");
 	
 			SpreadsheetQuery query = new SpreadsheetQuery(SPREADSHEET_FEED_URL);
-			query.setTitleQuery("NR2015 MP3 Speaker Database");
+			query.setTitleQuery(spreadsheetName);
 			query.setTitleExact(true);
 			// Make a request to the API and get all spreadsheets.
 			// SpreadsheetFeed feed = service.getFeed(SPREADSHEET_FEED_URL,
@@ -442,7 +418,7 @@ public class SpeakerSpreadsheet {
 	
 				for (WorksheetEntry sheet : sheets) {
 	
-					if (!sheet.getTitle().getPlainText().equalsIgnoreCase("Breakout")) {
+					if (!sheet.getTitle().getPlainText().equalsIgnoreCase(sheetName)) {
 						logger.trace("ignoring sheet '" + sheet.getTitle().getPlainText() + "'...we only care about the Breakout");
 					} else {
 						logger.trace("Looking at Sheet Name:" + sheet.getTitle().getPlainText());
@@ -456,37 +432,20 @@ public class SpeakerSpreadsheet {
 							CustomElementCollection attributes = row.getCustomElements();
 							
 							String mp3Name = attributes.getValue("mp3name");
-							String mp3State = attributes.getValue("mp3State");
-							String title = attributes.getValue("seminartitle");
-							String album = "No Regrets Conference 2015";
-							String artist = attributes.getValue("firstname") + " " + attributes.getValue("lastname");
-							
-							logger.trace("Evaluating seminar..." + mp3Name + ":" + mp3State);
-							
+													
 							if (mp3Name != null && mp3ToRetrieve != null && mp3ToRetrieve.equalsIgnoreCase(mp3Name)) {
-								data.put("mp3name", mp3Name);
-								data.put("mp3State", mp3State);
-								data.put("seminartitle", title);
-								data.put("seminaralbum", album);
-								data.put("seminarartist", artist);
+								data = new SpreadsheetDataRow(attributes);
 							}
 							
 						}
 					}
 				}
-				
-				
-				
 			}
 		
 		} catch (Throwable t) {
 			logger.error("problems updating the spreadsheet!", t);
 			throw new Error("problems updating the spreadsheet!", t);
 		}
-		
-		
-		
-		
 		
 		logger.trace("finished getting audio details for " + mp3ToRetrieve + ".");
 		

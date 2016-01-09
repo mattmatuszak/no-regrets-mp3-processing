@@ -25,7 +25,7 @@ echo "Leadin Audio:" $leadIn
 
 echo ""
 echo "Adding Lead into Audio..."
-sox -m $leadIn $sourceAudio $targetAudio
+sox $leadIn $sourceAudio $targetAudio
 echo "Finished Adding Lead into Audio."
 echo ""
 

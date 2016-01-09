@@ -18,17 +18,17 @@ public class ConvertToMP3 extends AbstractAudioRunnable {
 	public ConvertToMP3(String audioName) {
 		super(audioName);
 		
-		audioWithLeadin = Paths.get(workingAudioDirectory + "/" + audioName + "_withLeadin.wav").toFile();
+		/*audioWithLeadin = Paths.get(workingAudioDirectory + "/" + audioName + "_withLeadin.wav").toFile();
 		
 		if (!audioWithLeadin.exists()) {
 			throw new Error("audio does not exist:" + audioWithLeadin.getAbsolutePath());
-		}
+		}*/
 	}
 
 	@Override
 	public void execute() {
 		
-		logger.info("finalizing our audio via our shell script...");
+		/*logger.info("finalizing our audio via our shell script...");
 		
 		HashMap<String, String> audioTags = getSpeakerSS().getAudioDetails(getId());
 		
@@ -58,6 +58,7 @@ public class ConvertToMP3 extends AbstractAudioRunnable {
 		}
 		
 		logger.info("finished finalizing our audio via our shell script.");
+		*/
 	}
 
 	@Override

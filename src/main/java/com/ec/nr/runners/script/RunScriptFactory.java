@@ -5,11 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ec.nr.NREnvironment;
+import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 
 @Component
 public class RunScriptFactory {
 
 	@Autowired private NREnvironment env;
+	@Autowired private SpeakerSpreadsheet spreadsheet;
 	
 	@Value( "${audio.config.leadin}" )
 	private String LEADIN_FILE_NAME;
@@ -35,6 +38,9 @@ public class RunScriptFactory {
 			return new ScriptRunner(env, new ScriptInfo("addLeadIn.sh", "Add Lead In", mp3Id, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME));
 			
 		case "Add Lead In Complete":
+			
+			SpreadsheetDataRow audioDetails = spreadsheet.getAudioDetails(mp3Id);
+			
 			return new ScriptRunner
 					(
 							env
@@ -43,9 +49,9 @@ public class RunScriptFactory {
 								"tagMP3.sh"
 								, "Tag MP3"
 								, mp3Id
-								,  " -at audio title"
-								 + " -al album title"
-								 + " -ar artist"
+								,  " -e '" + audioDetails.getFieldValue(SpreadsheetDataRow.Field.SEMINAR) + "'"
+								 + " -l '" + audioDetails.getFieldValue(SpreadsheetDataRow.Field.CONFERENCE) + "'"
+								 + " -r '" + audioDetails.getFieldValue(SpreadsheetDataRow.Field.SPEAKER) + "'"
 								 + " -i " + env.DATA_DIR + "/" + LOGO_FILE_NAME
 							)
 					);
