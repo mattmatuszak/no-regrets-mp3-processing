@@ -51,20 +51,44 @@ public class TestRunScript extends AbstractTestExecutionListener {
 	
 	@Test
 	public void testSilence() {
-		ScriptRunner removeSilenceRunner = runScriptFactory.getScriptRunner("Convert To Mono Complete", "");
-		removeSilenceRunner.run();
+		ScriptRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrSilence-sample");
+		convertToMono.run();
+		ScriptRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrSilence-sample");
+		amplify.run();
+		ScriptRunner removeSilence = runScriptFactory.getScriptRunner("Convert To Mono Complete", "nrSilence-sample");
+		removeSilence.run();
+		ScriptRunner addLeadIn = runScriptFactory.getScriptRunner("Amplify Complete", "nrSilence-sample");
+		addLeadIn.run();
+		ScriptRunner tagMP3 = runScriptFactory.getScriptRunner("Add Lead In Complete", "nrSilence-sample");
+		tagMP3.run();
 	}
 	
 	@Test
 	public void testClassic() {
-		ScriptRunner amplifyRunner = runScriptFactory.getScriptRunner("Remove Silence Complete", "");
-		amplifyRunner.run();
+		ScriptRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrClassic-sample");
+		convertToMono.run();
+		ScriptRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrClassic-sample");
+		amplify.run();
+		ScriptRunner removeSilence = runScriptFactory.getScriptRunner("Convert To Mono Complete", "nrClassic-sample");
+		removeSilence.run();
+		ScriptRunner addLeadIn = runScriptFactory.getScriptRunner("Amplify Complete", "nrClassic-sample");
+		addLeadIn.run();
+		ScriptRunner tagMP3 = runScriptFactory.getScriptRunner("Add Lead In Complete", "nrClassic-sample");
+		tagMP3.run();
 	}
 	
 	@Test
 	public void testCrazy() {
-		ScriptRunner amplifyRunner = runScriptFactory.getScriptRunner("Remove Silence Complete", "");
-		amplifyRunner.run();
+		ScriptRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrCrazy-sample");
+		convertToMono.run();
+		ScriptRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrCrazy-sample");
+		amplify.run();
+		ScriptRunner removeSilence = runScriptFactory.getScriptRunner("Convert To Mono Complete", "nrCrazy-sample");
+		removeSilence.run();
+		ScriptRunner addLeadIn = runScriptFactory.getScriptRunner("Amplify Complete", "nrCrazy-sample");
+		addLeadIn.run();
+		ScriptRunner tagMP3 = runScriptFactory.getScriptRunner("Add Lead In Complete", "nrCrazy-sample");
+		tagMP3.run();
 	}
 	
 }

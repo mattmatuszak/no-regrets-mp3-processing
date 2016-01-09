@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 
 public abstract class AbstractAudioRunnable extends AudioRunnersBase implements
 		MP3Runnable {
@@ -40,8 +41,8 @@ public abstract class AbstractAudioRunnable extends AudioRunnersBase implements
 		
 		if (newStatus != null) {
 		
-			getSpeakerSS().updateField(getId(), "mp3State", newStatus);
-			getSpeakerSS().updateField(getId(), getSpreadsheetDurationField(), String.valueOf(endTime-startTime));
+			//getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, newStatus);
+			//getSpeakerSS().updateField(getId(), getSpreadsheetDurationField(), String.valueOf(endTime-startTime));
 			//getSpeakerSS().updateBreakoutStatus(getId(), newStatus);
 			//getSpeakerSS().updateBreakoutStatus(getId(), newStatus);
 		}

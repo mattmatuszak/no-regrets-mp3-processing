@@ -314,8 +314,8 @@ public class SpeakerSpreadsheet {
 	}
 	
 	
-	public void updateField(String mp3NameToUpdate, String field, String value) {
-		logger.trace("updating " + mp3NameToUpdate + " --> " + field + " : " + value + "...");
+	public void updateField(String id, SpreadsheetDataRow.Field field, String value) {
+		logger.trace("updating " + id + " --> " + field.getFieldName() + " : " + value + "...");
 
 		try {
 		
@@ -356,23 +356,17 @@ public class SpeakerSpreadsheet {
 							
 							CustomElementCollection attributes = row.getCustomElements();
 							
-							String mp3Name = attributes.getValue("mp3name");
-							String mp3State = attributes.getValue("mp3State");
-							String mp3Field = attributes.getValue(field);
-							
-							logger.trace("Evaluating seminar..." + mp3Name + ":" + mp3State);
-							
-							if (mp3Name != null && mp3NameToUpdate != null && mp3NameToUpdate.equalsIgnoreCase(mp3Name)) {
+							String mp3Name = attributes.getValue(SpreadsheetDataRow.Field.MP3_ID.getFieldName());
+														
+							if (mp3Name != null && id != null && id.equalsIgnoreCase(mp3Name)) {
 									//&& (mp3State == null || mp3State.equalsIgnoreCase(""))) {
-								row.getCustomElements().setValueLocal(field, value);
+								row.getCustomElements().setValueLocal(field.getFieldName(), value);
 								row.update();
 							}
 							
 						}
 					}
 				}
-				
-				
 				
 			}
 		
@@ -385,7 +379,7 @@ public class SpeakerSpreadsheet {
 		
 		
 		
-		logger.trace("finished updating " + mp3NameToUpdate + " --> " + field + " : " + value + "...");
+		logger.trace("finished updating " + id + " --> " + field + " : " + value + "...");
 	}
 	
 	public SpreadsheetDataRow getAudioDetails(String mp3ToRetrieve) {

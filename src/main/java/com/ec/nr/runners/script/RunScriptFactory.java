@@ -26,16 +26,16 @@ public class RunScriptFactory {
 		
 		// upload complete 
 		case "UPC":
-			return new ScriptRunner(env, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null));
+			return new ScriptRunner(env, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null), spreadsheet);
 		
 		case "Convert To Mono Complete":
-			return new ScriptRunner(env, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null));
+			return new ScriptRunner(env, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null), spreadsheet);
 		
 		case "Remove Silence Complete":
-			return new ScriptRunner(env, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null));
+			return new ScriptRunner(env, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null), spreadsheet);
 		
 		case "Amplify Complete":
-			return new ScriptRunner(env, new ScriptInfo("addLeadIn.sh", "Add Lead In", mp3Id, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME));
+			return new ScriptRunner(env, new ScriptInfo("addLeadIn.sh", "Add Lead In", mp3Id, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME), spreadsheet);
 			
 		case "Add Lead In Complete":
 			
@@ -54,6 +54,7 @@ public class RunScriptFactory {
 								 + " -r '" + audioDetails.getFieldValue(SpreadsheetDataRow.Field.SPEAKER) + "'"
 								 + " -i " + env.DATA_DIR + "/" + LOGO_FILE_NAME
 							)
+							, spreadsheet
 					);
 			
 		default:

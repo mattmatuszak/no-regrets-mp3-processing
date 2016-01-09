@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 
 public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 
@@ -42,7 +43,7 @@ public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 			logger.info("About to update the spreadsheet to 'Ready'...");
 			HashMap<String, String> data = null;// getSpeakerSS().getAudioDetails(getId());
 			if (data.get("mp3State") == null || data.get("mp3State").equalsIgnoreCase("")) {
-				getSpeakerSS().updateField(getId(), "mp3State", "Ready");
+				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, "In Landing Pad");
 			} else {
 				logger.debug("Ignoring MP3:" + getId());
 			}
