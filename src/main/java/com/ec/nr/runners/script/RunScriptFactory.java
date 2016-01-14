@@ -30,12 +30,12 @@ public class RunScriptFactory {
 			return new ScriptProcessingRunner(env, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null), spreadsheet);
 		
 		case "Convert To Mono Complete":
+			return new ScriptProcessingRunner(env, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null), spreadsheet);
+			
+		case "Amplify Complete":
 			return new ScriptProcessingRunner(env, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null), spreadsheet);
 		
 		case "Remove Silence Complete":
-			return new ScriptProcessingRunner(env, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null), spreadsheet);
-		
-		case "Amplify Complete":
 			return new ScriptProcessingRunner(env, new ScriptInfo("addLeadIn.sh", "Add Lead In", mp3Id, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME), spreadsheet);
 			
 		case "Add Lead In Complete":
