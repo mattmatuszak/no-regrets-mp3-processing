@@ -1,6 +1,5 @@
 package com.ec.nr.watcher;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -14,10 +13,10 @@ import java.nio.file.WatchService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ec.nr.runners.NewMP3AudoReceivedRunnable;
+import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
 import com.ec.nr.workq.WorkQManager;
 
 @Service
@@ -27,6 +26,7 @@ public class LandingPadWatcher extends Thread {
 	private static Logger logger = LogManager.getLogger(LandingPadWatcher.class);
 	
 	@Autowired private WorkQManager workQ;
+	@Autowired private SpeakerSpreadsheet speakerSpreadsheet;
 	
 	private String pathToWatch;
 
@@ -48,7 +48,7 @@ public class LandingPadWatcher extends Thread {
 
 			// We register the path to the service
 			// We watch for creation events
-			path.register(service, /*java.nio.file.StandardWatchEventKinds.ENTRY_CREATE*/StandardWatchEventKinds.ENTRY_MODIFY);
+			path.register(service, StandardWatchEventKinds.ENTRY_CREATE);
 
 			// Start the infinite polling loop
 			WatchKey key = null;
@@ -65,15 +65,13 @@ public class LandingPadWatcher extends Thread {
 					if (java.nio.file.StandardWatchEventKinds.OVERFLOW == kind) {
 						continue; // loop
 					//} else if (StandardWatchEventKinds.ENTRY_CREATE == kind) {
-					} else if (StandardWatchEventKinds.ENTRY_MODIFY == kind) {
+					} else if (StandardWatchEventKinds.ENTRY_CREATE == kind) {
 						// A new Path was created
 						Path newPath = ((WatchEvent<Path>) watchEvent).context();
 						String newPathString = newPath.toString();
 						String mp3Name = (newPathString.lastIndexOf("/") > 0) ? newPathString.substring(newPathString.lastIndexOf("/")+1,  newPathString.indexOf(".mp3")) : newPathString.substring(0,  newPathString.indexOf(".mp3"));
 						
-						//workQ.addAudio(new NewMP3AudoReceivedRunnable(newPath.toString().substring(0, newPath.toString().indexOf(".mp3"))));
-						workQ.addAudio(new NewMP3AudoReceivedRunnable(mp3Name));
-						//LandingPadExecutor.getExecutor().addAudio(new LandingPadAudioRunnable(new File(path.toString() + "/" + newPath.toString())));
+						workQ.addAudio(new NewMP3AudoReceivedRunnable(speakerSpreadsheet, workQ, newPathString, mp3Name));
 						
 						logger.debug("New audio created: " + newPath);
 					} else if (StandardWatchEventKinds.ENTRY_MODIFY == kind) {

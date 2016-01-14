@@ -1,14 +1,12 @@
 package com.ec.nr.runners;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
-import com.ec.nr.sheets.creds.SpreadsheetDataRow;
+import com.ec.nr.workq.WorkQManager;
 
 public abstract class AbstractAudioRunnable extends AudioRunnersBase implements
 		MP3Runnable {
@@ -21,8 +19,8 @@ public abstract class AbstractAudioRunnable extends AudioRunnersBase implements
 	
 	public abstract String getSpreadsheetDurationField();
 	
-	public AbstractAudioRunnable(String audioName) {
-		super();
+	public AbstractAudioRunnable(SpeakerSpreadsheet ss, WorkQManager wqm, String audioName) {
+		super(ss, wqm);
 		
 		id = audioName;
 	}

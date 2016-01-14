@@ -16,9 +16,10 @@ public class ConvertToMP3 extends AbstractAudioRunnable {
 	private File audioWithLeadin;
 
 	public ConvertToMP3(String audioName) {
-		super(audioName);
+		super(null, null, null);
+		/*super(audioName);
 		
-		/*audioWithLeadin = Paths.get(workingAudioDirectory + "/" + audioName + "_withLeadin.wav").toFile();
+		audioWithLeadin = Paths.get(workingAudioDirectory + "/" + audioName + "_withLeadin.wav").toFile();
 		
 		if (!audioWithLeadin.exists()) {
 			throw new Error("audio does not exist:" + audioWithLeadin.getAbsolutePath());

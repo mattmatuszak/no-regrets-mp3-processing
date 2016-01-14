@@ -107,7 +107,7 @@ public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 
 			if (returnCode == 0) {
 				// status = "Completed MP3 to WAV Conversion";
-				updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " Completed");
+				updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " Complete");
 			} else {
 				logger.error("problems running command:" + Arrays.toString(buildCommand()));
 			}

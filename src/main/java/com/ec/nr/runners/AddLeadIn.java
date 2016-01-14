@@ -22,7 +22,8 @@ public class AddLeadIn extends AbstractAudioRunnable {
 	private String status = "Failed Adding Leadin";
 
 	public AddLeadIn(String audioName) {
-		super(audioName);
+		super(null, null, null);
+		/*		super(audioName);
 		
 		wavAudio = Paths.get(workingAudioDirectory + "/" + audioName + ".wav").toFile();
 		audioWithLeadin = Paths.get(workingAudioDirectory + "/" + audioName + "_withLeadin.wav").toFile();
@@ -37,7 +38,7 @@ public class AddLeadIn extends AbstractAudioRunnable {
 			logger.error("problems referencing teh lead in file:" + dataDirectory + "/LeadIn.wav", t);
 			throw new Error("problems referencing teh lead in file:" + dataDirectory + "/LeadIn.wav", t);
 		}
-		
+*/		
 	}
 
 	@Override

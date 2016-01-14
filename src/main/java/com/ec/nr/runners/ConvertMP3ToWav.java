@@ -23,8 +23,8 @@ public class ConvertMP3ToWav extends AbstractAudioRunnable {
 	
 	
 	public ConvertMP3ToWav(String audioId) {
-		
-		super(audioId);
+		super(null, null, null);
+/*		super(audioId);
 		
 		File audio = Paths.get(landingPadDirectory + "/" + audioId + ".mp3").toFile();
 		
@@ -36,12 +36,13 @@ public class ConvertMP3ToWav extends AbstractAudioRunnable {
 		logger.trace("Landing Pad Runnable Received For:" + audio.getName());
 		
 		mp3Audio = audio.getAbsolutePath();
-		wavAudio = workingAudioDirectory + "/" + audioId + ".wav";		
+		wavAudio = workingAudioDirectory + "/" + audioId + ".wav";
+*/		
 	}
 	
 	@Override
 	public void execute() {
-		logger.debug("converting mp3 to wav...");
+/*		logger.debug("converting mp3 to wav...");
 		
 		String[] cmd = 
 			{ 
@@ -67,7 +68,7 @@ public class ConvertMP3ToWav extends AbstractAudioRunnable {
 		}
 		
 		logger.debug("finsished converting mp3 to wave.");
-		
+*/		
 	}
 
 	@Override
