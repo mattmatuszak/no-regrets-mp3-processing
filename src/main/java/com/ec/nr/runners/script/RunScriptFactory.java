@@ -20,28 +20,29 @@ public class RunScriptFactory {
 	@Value( "${audio.config.logo}" )
 	private String LOGO_FILE_NAME;
 	
-	public ScriptRunner getScriptRunner(String status, String mp3Id) {
+	public ScriptProcessingRunner getScriptRunner(String status, String mp3Id) {
 		
 		switch(status) {
 		
 		// upload complete 
 		case "UPC":
-			return new ScriptRunner(env, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null), spreadsheet);
+		case "upc":
+			return new ScriptProcessingRunner(env, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null), spreadsheet);
 		
 		case "Convert To Mono Complete":
-			return new ScriptRunner(env, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null), spreadsheet);
+			return new ScriptProcessingRunner(env, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null), spreadsheet);
 		
 		case "Remove Silence Complete":
-			return new ScriptRunner(env, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null), spreadsheet);
+			return new ScriptProcessingRunner(env, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null), spreadsheet);
 		
 		case "Amplify Complete":
-			return new ScriptRunner(env, new ScriptInfo("addLeadIn.sh", "Add Lead In", mp3Id, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME), spreadsheet);
+			return new ScriptProcessingRunner(env, new ScriptInfo("addLeadIn.sh", "Add Lead In", mp3Id, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME), spreadsheet);
 			
 		case "Add Lead In Complete":
 			
 			SpreadsheetDataRow audioDetails = spreadsheet.getAudioDetails(mp3Id);
 			
-			return new ScriptRunner
+			return new ScriptProcessingRunner
 					(
 							env
 							, new ScriptInfo
@@ -56,6 +57,23 @@ public class RunScriptFactory {
 							)
 							, spreadsheet
 					);
+		
+		case "Tag MP3 Complete": 
+			return new CopyToFinalRunner
+					(
+							env
+							, new ScriptInfo
+							(
+									"copyToFinal.sh"
+									, "Copy To Final"
+									, mp3Id
+									, " -t " + env.FINAL_AUDIO_DIR + "/" + mp3Id + ".mp3"
+							)
+							, spreadsheet
+					);
+		
+		case "Copy To Final Complete":
+			return new FTPRunner(env, new ScriptInfo("ftp.sh", "FTP", mp3Id, " -s " + env.FINAL_AUDIO_DIR + "/" + mp3Id + ".mp3"), spreadsheet);
 			
 		default:
 			return null;

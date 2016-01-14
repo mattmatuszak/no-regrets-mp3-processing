@@ -10,12 +10,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ec.nr.NREnvironment;
+import com.ec.nr.runners.MP3Runnable;
 import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 
-public class ScriptRunner implements Runnable {
+public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 
-	private static Logger logger = LogManager.getLogger(ScriptRunner.class);
+	private static Logger logger = LogManager.getLogger(ScriptProcessingRunner.class);
 
 	private SpeakerSpreadsheet spreadsheet;
 	
@@ -25,20 +26,32 @@ public class ScriptRunner implements Runnable {
 	private File currentFile;
 	private File nextFile;
 
-	protected ScriptRunner(NREnvironment env, ScriptInfo info, SpeakerSpreadsheet spreadsheet) {
+	protected ScriptProcessingRunner(NREnvironment env, ScriptInfo info, SpeakerSpreadsheet spreadsheet) {
 		super();
 		this.nrEnvironment = env;
 		this.scriptInfo = info;
 		this.spreadsheet = spreadsheet;
-		setupFile();
+		setupWorkingFiles();
 		updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " Queued");
 	}
 	
 	private void updateStatus(String id, String value) {
 		spreadsheet.updateField(id, SpreadsheetDataRow.Field.MP3_STATE, value);
 	}
+	
+	protected NREnvironment getNREnvironment() {
+		return nrEnvironment;
+	}
+	
+	protected ScriptInfo getScriptInfo() {
+		return scriptInfo;
+	}
+	
+	protected File getCurrentFile() {
+		return currentFile;
+	}
 
-	private void setupFile() {
+	protected void setupWorkingFiles() {
 		int fileIndex = -1;
 
 		if (!new File(this.nrEnvironment.WORKING_DIR + "/" + this.scriptInfo.getId() + "-" + ++fileIndex + ".mp3").exists()) {
@@ -68,7 +81,7 @@ public class ScriptRunner implements Runnable {
 		}
 	}
 	
-	private String[] buildCommand() {
+	protected String[] buildCommand() {
 		String[] cmd = 
 			{
 				"/bin/sh"
@@ -105,6 +118,11 @@ public class ScriptRunner implements Runnable {
 			throw new Error("problems scrubbing the audio file with LAME: " + "", e);
 		}
 
+	}
+
+	@Override
+	public String getId() {
+		return this.scriptInfo.getId();
 	}
 
 }

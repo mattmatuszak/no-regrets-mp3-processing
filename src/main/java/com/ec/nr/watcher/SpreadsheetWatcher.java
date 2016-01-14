@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.ec.nr.runners.AddLeadIn;
 import com.ec.nr.runners.ConvertMP3ToWav;
 import com.ec.nr.runners.ConvertToMP3;
+import com.ec.nr.runners.script.RunScriptFactory;
+import com.ec.nr.runners.script.ScriptProcessingRunner;
 import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
 import com.ec.nr.workq.WorkQManager;
 
@@ -21,6 +23,7 @@ public class SpreadsheetWatcher extends Thread {
 	
 	@Autowired private WorkQManager workQ;
 	@Autowired private SpeakerSpreadsheet speakerSS;
+	@Autowired private RunScriptFactory scriptFactory;
 	
 	private int sleepTimeInterval;
 	
@@ -43,7 +46,15 @@ public class SpreadsheetWatcher extends Thread {
 				String mp3Status = (mp3Statuses.get(mp3) == null) ? "" : mp3Statuses.get(mp3);
 				logger.trace("mp3 being evaluated:" + mp3 + "|" + mp3Status);
 				
-				switch (mp3Status) {
+				ScriptProcessingRunner runner = scriptFactory.getScriptRunner(mp3Status, mp3);
+				
+				if (runner != null) {
+					workQ.addAudio(runner);
+				} else {
+					logger.error("Not sure what to do with MP3 Id {} with status {}", mp3, mp3Status);
+				}
+				
+				/*switch (mp3Status) {
 					case "x":
 					case "X":
 						workQ.addAudio(new ConvertMP3ToWav(mp3));
@@ -59,7 +70,7 @@ public class SpreadsheetWatcher extends Thread {
 	
 					default:
 						break;
-				}
+				}*/
 			}
 			
 			
@@ -75,27 +86,10 @@ public class SpreadsheetWatcher extends Thread {
 		
 	}
 
-
-	public WorkQManager getWorkQ() {
-		return workQ;
-	}
-
-
-	public void setWorkQ(WorkQManager workQ) {
-		this.workQ = workQ;
-	}
-
 	public void run() {
 		watch();
 		
 	}
 
-	public void setSpeakerSS(SpeakerSpreadsheet speakerSS) {
-		this.speakerSS = speakerSS;
-	}
-
-	public void setSleepTimeInterval(int sleepTimeInterval) {
-		this.sleepTimeInterval = sleepTimeInterval;
-	}
 
 }

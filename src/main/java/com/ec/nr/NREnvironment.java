@@ -16,4 +16,9 @@ public class NREnvironment {
 	public String DATA_DIR;
 	@Value( "${audio.runners.base.final}" )
 	public String FINAL_AUDIO_DIR;
+	@Value( "${audio.runners.base.user}")
+	public String FTP_U;
+	@Value( "${audio.runners.base.pass}")
+	public String FTP_P;
 }
+ 
