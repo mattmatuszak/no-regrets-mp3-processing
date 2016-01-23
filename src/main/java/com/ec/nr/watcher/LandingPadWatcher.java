@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ec.nr.runners.NewMP3AudoReceivedRunnable;
-import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.workq.WorkQManager;
 
 @Service
@@ -26,7 +26,7 @@ public class LandingPadWatcher extends Thread {
 	private static Logger logger = LogManager.getLogger(LandingPadWatcher.class);
 	
 	@Autowired private WorkQManager workQ;
-	@Autowired private SpeakerSpreadsheet speakerSpreadsheet;
+	@Autowired private MP3SpreadsheetService speakerSpreadsheet;
 	
 	private String pathToWatch;
 

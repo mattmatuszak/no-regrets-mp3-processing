@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -21,6 +22,7 @@ import com.ec.nr.runners.script.RunScriptFactory;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(NRMP3AppConfig.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TestRunScript.class })
+@TestPropertySource(locations="classpath:testapplication.properties")
 public class TestRunScript extends AbstractTestExecutionListener {
 
 	@Autowired RunScriptFactory runScriptFactory;
@@ -31,19 +33,24 @@ public class TestRunScript extends AbstractTestExecutionListener {
 		
 		NREnvironment env = testContext.getApplicationContext().getBean(NREnvironment.class);
 		
-		FileUtils.cleanDirectory(new File(env.WORKING_DIR));
+		FileUtils.cleanDirectory(new File(env.PRE_USER_EDIT_DIR));
+		FileUtils.cleanDirectory(new File(env.USER_EDIT_DIR));
+		FileUtils.cleanDirectory(new File(env.POST_USER_EDIT_DIR));
 		FileUtils.cleanDirectory(new File(env.LOGS_DIR));
+		FileUtils.cleanDirectory(new File(env.FINAL_AUDIO_DIR));
 	}
 
 	@Test
 	public void testQuiet() {
-		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrQuiet-sample");
+		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("Upload Complete", "nrQuiet-sample");
 		convertToMono.run();
-		ScriptProcessingRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrQuiet-sample");
+		ScriptProcessingRunner amplify = runScriptFactory.getScriptRunner("Convert To Mono Complete", "nrQuiet-sample");
 		amplify.run();
-		ScriptProcessingRunner removeSilence = runScriptFactory.getScriptRunner("Convert To Mono Complete", "nrQuiet-sample");
+		ScriptProcessingRunner removeSilence = runScriptFactory.getScriptRunner("Amplify Complete", "nrQuiet-sample");
 		removeSilence.run();
-		ScriptProcessingRunner addLeadIn = runScriptFactory.getScriptRunner("Amplify Complete", "nrQuiet-sample");
+		ScriptProcessingRunner copyToUserEdit = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrQuiet-sample");
+		copyToUserEdit.run();
+		ScriptProcessingRunner addLeadIn = runScriptFactory.getScriptRunner("D", "nrQuiet-sample");
 		addLeadIn.run();
 		ScriptProcessingRunner tagMP3 = runScriptFactory.getScriptRunner("Add Lead In Complete", "nrQuiet-sample");
 		tagMP3.run();
@@ -55,7 +62,7 @@ public class TestRunScript extends AbstractTestExecutionListener {
 	
 	@Test
 	public void testSilence() {
-		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrSilence-sample");
+		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("Upload Complete", "nrSilence-sample");
 		convertToMono.run();
 		ScriptProcessingRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrSilence-sample");
 		amplify.run();
@@ -69,7 +76,7 @@ public class TestRunScript extends AbstractTestExecutionListener {
 	
 	@Test
 	public void testClassic() {
-		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrClassic-sample");
+		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("Upload Complete", "nrClassic-sample");
 		convertToMono.run();
 		ScriptProcessingRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrClassic-sample");
 		amplify.run();
@@ -83,7 +90,7 @@ public class TestRunScript extends AbstractTestExecutionListener {
 	
 	@Test
 	public void testCrazy() {
-		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("UPC", "nrCrazy-sample");
+		ScriptProcessingRunner convertToMono = runScriptFactory.getScriptRunner("Upload Complete", "nrCrazy-sample");
 		convertToMono.run();
 		ScriptProcessingRunner amplify = runScriptFactory.getScriptRunner("Remove Silence Complete", "nrCrazy-sample");
 		amplify.run();

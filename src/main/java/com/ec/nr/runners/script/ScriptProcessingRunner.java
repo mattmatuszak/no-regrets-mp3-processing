@@ -7,70 +7,80 @@ import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ec.nr.NREnvironment;
 import com.ec.nr.runners.MP3Runnable;
-import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 
 public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 
 	private static Logger logger = LogManager.getLogger(ScriptProcessingRunner.class);
 
-	private SpeakerSpreadsheet spreadsheet;
+	private MP3SpreadsheetService spreadsheetService;
 	
-	private NREnvironment nrEnvironment;
+	private DirectoryInfo directoryInfo;
 	private ScriptInfo scriptInfo;
 
 	private File currentFile;
 	private File nextFile;
 
-	protected ScriptProcessingRunner(NREnvironment env, ScriptInfo info, SpeakerSpreadsheet spreadsheet) {
+	protected ScriptProcessingRunner(DirectoryInfo directoryInfo, ScriptInfo info, MP3SpreadsheetService spreadsheet) {
 		super();
-		this.nrEnvironment = env;
+		this.directoryInfo = directoryInfo;
 		this.scriptInfo = info;
-		this.spreadsheet = spreadsheet;
+		this.spreadsheetService = spreadsheet;
 		setupWorkingFiles();
 		updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " Queued");
 	}
 	
 	private void updateStatus(String id, String value) {
-		spreadsheet.updateField(id, SpreadsheetDataRow.Field.MP3_STATE, value);
+		spreadsheetService.updateField(id, SpreadsheetDataRow.Field.MP3_STATE, value);
 	}
 	
-	protected NREnvironment getNREnvironment() {
-		return nrEnvironment;
+	protected DirectoryInfo getDirectoryInfo() {
+		return directoryInfo;
 	}
 	
 	protected ScriptInfo getScriptInfo() {
 		return scriptInfo;
 	}
 	
+	protected void setCurrentFile(File f) {
+		this.currentFile = f;
+	}
+	
 	protected File getCurrentFile() {
 		return currentFile;
 	}
-
-	protected void setupWorkingFiles() {
-		int fileIndex = -1;
-
-		if (!new File(this.nrEnvironment.WORKING_DIR + "/" + this.scriptInfo.getId() + "-" + ++fileIndex + ".mp3").exists()) {
+	
+	protected void setNextFile(File f) {
+		this.nextFile = f;
+	}
+	
+	protected File getNextFile() {
+		return nextFile;
+	}
+	
+	protected void copyBaseFileIfNotExists(int fileIndex) {
+		if (!new File(directoryInfo.getWorkingDirectory() + "/" + this.scriptInfo.getId() + "-" + fileIndex + ".mp3").exists()) {
 			try {
 				FileUtils.copyFile
 				(
-					new File(this.nrEnvironment.LANDING_PAD_DIR + "/" + this.scriptInfo.getId() + ".mp3")
-					, new File(this.nrEnvironment.WORKING_DIR + "/" + this.scriptInfo.getId() + "-" + fileIndex + ".mp3")
+					new File(directoryInfo.getSourceDirectory() + "/" + this.scriptInfo.getId() + ".mp3")
+					, new File(directoryInfo.getWorkingDirectory() + "/" + this.scriptInfo.getId() + "-" + fileIndex + ".mp3")
 				);
 			} catch (IOException e) {
 				throw new RuntimeException("problems copying file to directory", e);
 			}
-		} 
-
+		}
+	}
+	
+	protected void setupCurrentAndNextFiles(int fileIndex) {
 		while (nextFile == null) {
-			nextFile = new File(this.nrEnvironment.WORKING_DIR + "/" + this.scriptInfo.getId() + "-" + ++fileIndex + ".mp3");
+			nextFile = new File(directoryInfo.getWorkingDirectory() + "/" + this.scriptInfo.getId() + "-" + ++fileIndex + ".mp3");
 			if (!nextFile.exists()) {
 				currentFile = new File(
-						this.nrEnvironment.WORKING_DIR + "/" + this.scriptInfo.getId() + "-" + (fileIndex - 1) + ".mp3");
+						directoryInfo.getWorkingDirectory() + "/" + this.scriptInfo.getId() + "-" + (fileIndex - 1) + ".mp3");
 				break;
 			} else {
 				nextFile = null;
@@ -80,17 +90,23 @@ public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 				throw new RuntimeException("I'm giving up looking for file with id:" + this.scriptInfo.getId());
 		}
 	}
+
+	protected void setupWorkingFiles() {
+		int fileIndex = -1;
+		copyBaseFileIfNotExists(++fileIndex);
+		setupCurrentAndNextFiles(fileIndex);
+	}
 	
 	protected String[] buildCommand() {
 		String[] cmd = 
 			{
 				"/bin/sh"
 				, "-c"
-				, nrEnvironment.SCRIPTS_DIR + "/" + this.scriptInfo.getScriptToRun() 
+				, directoryInfo.getScriptDirectory() + "/" + this.scriptInfo.getScriptToRun() 
 					+ " -s " + currentFile.getAbsolutePath()
 					+ " -t " + nextFile.getAbsolutePath() 
 					+ ((this.scriptInfo.getExtraScriptParameters() != null) ? this.scriptInfo.getExtraScriptParameters() : "")
-					+ " > " + nrEnvironment.LOGS_DIR + "/" + this.scriptInfo.getId() + "_" + this.scriptInfo.getScriptAliasName() + ".log" 
+					+ " > " + directoryInfo.getLogsDirectory() + "/" + this.scriptInfo.getId() + "_" + this.scriptInfo.getScriptAliasName().replaceAll(" ",  "") + ".log" 
 			};
 		
 		return cmd;

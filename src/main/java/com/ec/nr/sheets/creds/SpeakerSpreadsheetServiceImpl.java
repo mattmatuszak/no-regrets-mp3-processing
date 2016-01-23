@@ -1,30 +1,5 @@
 package com.ec.nr.sheets.creds;
 
-import com.ec.nr.sheets.creds.SpreadsheetDataRow.Field;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.DataStoreFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.oauth2.Oauth2;
-import com.google.api.services.oauth2.model.Tokeninfo;
-import com.google.api.services.oauth2.model.Userinfoplus;
-import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
-import com.google.gdata.client.spreadsheet.SpreadsheetService;
-import com.google.gdata.data.spreadsheet.CustomElementCollection;
-import com.google.gdata.data.spreadsheet.ListEntry;
-import com.google.gdata.data.spreadsheet.ListFeed;
-import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
-import com.google.gdata.data.spreadsheet.SpreadsheetFeed;
-import com.google.gdata.data.spreadsheet.WorksheetEntry;
-import com.google.gdata.util.ServiceException;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -41,10 +16,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-@Service
-public class SpeakerSpreadsheet {
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.oauth2.Oauth2;
+import com.google.api.services.oauth2.model.Tokeninfo;
+import com.google.api.services.oauth2.model.Userinfoplus;
+import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
+import com.google.gdata.client.spreadsheet.SpreadsheetService;
+import com.google.gdata.data.spreadsheet.CustomElementCollection;
+import com.google.gdata.data.spreadsheet.ListEntry;
+import com.google.gdata.data.spreadsheet.ListFeed;
+import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
+import com.google.gdata.data.spreadsheet.SpreadsheetFeed;
+import com.google.gdata.data.spreadsheet.WorksheetEntry;
+import com.google.gdata.util.ServiceException;
 
-	private static Logger logger = LogManager.getLogger(SpeakerSpreadsheet.class);
+@Service
+public class SpeakerSpreadsheetServiceImpl implements MP3SpreadsheetService {
+
+	private static Logger logger = LogManager.getLogger(SpeakerSpreadsheetServiceImpl.class);
 
 	@Value( "${speaker.spreadsheet.appname}" )
 	private String applicationName;
@@ -68,13 +66,17 @@ public class SpeakerSpreadsheet {
 	private Oauth2 oauth2;
 	private Credential credential;
 	private GoogleClientSecrets clientSecrets;
+	
+	public SpeakerSpreadsheetServiceImpl() {
+		super();
+	}
 
 	/** Authorizes the installed application to access user's protected data. */
 	private Credential authorize() throws Exception {
 		// load client secrets
 		clientSecrets = GoogleClientSecrets.load(
 				JSON_FACTORY,
-				new InputStreamReader(SpeakerSpreadsheet.class
+				new InputStreamReader(SpeakerSpreadsheetServiceImpl.class
 						.getResourceAsStream(userInfo)));
 
 		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
@@ -166,6 +168,10 @@ public class SpeakerSpreadsheet {
 		logger.trace("");
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.ec.nr.sheets.creds.SpreadsheetService#getAllMP3Statuses()
+	 */
+	@Override
 	public Map<String, String> getAllMP3Statuses() {
 		
 		HashMap<String, String> mp3Statuses = new HashMap<String, String>();
@@ -234,6 +240,10 @@ public class SpeakerSpreadsheet {
 		return mp3Statuses;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ec.nr.sheets.creds.SpreadsheetService#updateBreakoutStatus(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void updateBreakoutStatus(String mp3NameToUpdate, String stage) {
 		logger.debug("updating status on mp3 " + mp3NameToUpdate + " to " + stage + "...");
 
@@ -314,6 +324,10 @@ public class SpeakerSpreadsheet {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.ec.nr.sheets.creds.SpreadsheetService#updateField(java.lang.String, com.ec.nr.sheets.creds.SpreadsheetDataRow.Field, java.lang.String)
+	 */
+	@Override
 	public void updateField(String id, SpreadsheetDataRow.Field field, String value) {
 		logger.trace("updating " + id + " --> " + field.getFieldName() + " : " + value + "...");
 
@@ -382,6 +396,10 @@ public class SpeakerSpreadsheet {
 		logger.trace("finished updating " + id + " --> " + field + " : " + value + "...");
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.ec.nr.sheets.creds.SpreadsheetService#getAudioDetails(java.lang.String)
+	 */
+	@Override
 	public SpreadsheetDataRow getAudioDetails(String mp3ToRetrieve) {
 		logger.trace("getting audio details for " + mp3ToRetrieve + "...");
 		SpreadsheetDataRow data = null;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
 import com.ec.nr.watcher.LandingPadWatcher;
@@ -34,6 +35,7 @@ public class NRMP3AppConfig {
 	private int spreadsheetSleepTimeInterval;
 	
 	@Bean
+	@Profile(value="live")
 	public SpreadsheetWatcher spreadsheetWatcher() {
 		return new SpreadsheetWatcher(spreadsheetSleepTimeInterval);
 	}

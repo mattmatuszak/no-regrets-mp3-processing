@@ -1,8 +1,6 @@
 package com.ec.nr.runners;
 
 import java.io.File;
-import java.nio.file.Paths;
-import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

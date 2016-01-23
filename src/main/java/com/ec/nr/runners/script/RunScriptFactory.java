@@ -5,14 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ec.nr.NREnvironment;
-import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 
 @Component
 public class RunScriptFactory {
 
 	@Autowired private NREnvironment env;
-	@Autowired private SpeakerSpreadsheet spreadsheet;
+	@Autowired private MP3SpreadsheetService spreadsheet;
 	
 	@Value( "${audio.config.leadin}" )
 	private String LEADIN_FILE_NAME;
@@ -25,18 +25,58 @@ public class RunScriptFactory {
 		switch(status) {
 		
 		// upload complete 
-		case "UPC":
-		case "upc":
-			return new ScriptProcessingRunner(env, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null), spreadsheet);
+		case "Upload Complete":
+			return new ScriptProcessingRunner
+					(
+							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null)
+							, spreadsheet
+					);
 		
 		case "Convert To Mono Complete":
-			return new ScriptProcessingRunner(env, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null), spreadsheet);
+			return new ScriptProcessingRunner
+					(
+							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null)
+							, spreadsheet
+					);
 			
 		case "Amplify Complete":
-			return new ScriptProcessingRunner(env, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null), spreadsheet);
+			return new ScriptProcessingRunner
+					(
+							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null)
+							, spreadsheet
+					);
 		
 		case "Remove Silence Complete":
-			return new ScriptProcessingRunner(env, new ScriptInfo("addLeadIn.sh", "Add Lead In", mp3Id, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME), spreadsheet);
+			return new CopyRunner
+					(
+							new DirectoryInfo(env.PRE_USER_EDIT_DIR, env.USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo
+							(
+									"copy.sh" 
+									, "Copy To User Edit"
+									, mp3Id
+									, null//" -t " + env.USER_EDIT_DIR + "/" + mp3Id + ".mp3"
+							)
+							, spreadsheet
+					);
+		
+		case "D":
+		case "d":
+			return new ScriptProcessingRunner
+					(
+							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo
+							(
+									"addLeadIn.sh"
+									, "Add Lead In"
+									, mp3Id
+									, " -l " + env.DATA_DIR + "/" + LEADIN_FILE_NAME
+							)
+							, spreadsheet
+					);
 			
 		case "Add Lead In Complete":
 			
@@ -44,7 +84,7 @@ public class RunScriptFactory {
 			
 			return new ScriptProcessingRunner
 					(
-							env
+							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
 								"tagMP3.sh"
@@ -59,21 +99,26 @@ public class RunScriptFactory {
 					);
 		
 		case "Tag MP3 Complete": 
-			return new CopyToFinalRunner
+			return new CopyRunner
 					(
-							env
+							new DirectoryInfo(env.POST_USER_EDIT_DIR, env.FINAL_AUDIO_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
-									"copyToFinal.sh"
+									"copy.sh"
 									, "Copy To Final"
 									, mp3Id
-									, " -t " + env.FINAL_AUDIO_DIR + "/" + mp3Id + ".mp3"
+									, null
 							)
 							, spreadsheet
 					);
 		
 		case "Copy To Final Complete":
-			return new FTPRunner(env, new ScriptInfo("ftp.sh", "FTP", mp3Id, " -s " + env.FINAL_AUDIO_DIR + "/" + mp3Id + ".mp3"), spreadsheet);
+			return new FTPRunner
+					(
+							new DirectoryInfo(env.USER_EDIT_DIR, env.FINAL_AUDIO_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo("ftp.sh", "FTP", mp3Id, " -s " + env.FINAL_AUDIO_DIR + "/" + mp3Id + ".mp3")
+							, spreadsheet
+					);
 			
 		default:
 			return null;

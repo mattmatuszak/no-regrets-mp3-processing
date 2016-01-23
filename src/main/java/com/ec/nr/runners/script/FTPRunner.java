@@ -1,14 +1,15 @@
 package com.ec.nr.runners.script;
 
-import com.ec.nr.NREnvironment;
-import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 
 public class FTPRunner extends ScriptProcessingRunner {
 
-	protected FTPRunner(NREnvironment env, ScriptInfo info, SpeakerSpreadsheet spreadsheet) {
-		super(env, info, spreadsheet);
+	protected FTPRunner(DirectoryInfo dirInfo, ScriptInfo info, MP3SpreadsheetService spreadsheet) {
+		super(dirInfo, info, spreadsheet);
 	}
 	
+	@Override
+	protected void setupWorkingFiles() {};
 	
 	@Override
 	protected String[] buildCommand() {
@@ -17,11 +18,9 @@ public class FTPRunner extends ScriptProcessingRunner {
 			{
 				"/bin/sh"
 				, "-c"
-				, getNREnvironment().SCRIPTS_DIR + "/" + getScriptInfo().getScriptToRun() 
+				, getDirectoryInfo().getScriptDirectory() + "/" + getScriptInfo().getScriptToRun() 
 					+ ((getScriptInfo().getExtraScriptParameters() != null) ? getScriptInfo().getExtraScriptParameters() : "")
-					+ " -u " + getNREnvironment().FTP_U
-					+ " -p " + getNREnvironment().FTP_P
-					+ " > " + getNREnvironment().LOGS_DIR + "/" + getScriptInfo().getId() + "_" + getScriptInfo().getScriptAliasName() + ".log" 
+					+ " > " + getDirectoryInfo().getLogsDirectory() + "/" + getScriptInfo().getId() + "_" + getScriptInfo().getScriptAliasName().replaceAll(" ",  "") + ".log" 
 			};
 		
 		return cmd;

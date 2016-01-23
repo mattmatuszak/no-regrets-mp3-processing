@@ -5,15 +5,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.ec.nr.runners.AddLeadIn;
-import com.ec.nr.runners.ConvertMP3ToWav;
-import com.ec.nr.runners.ConvertToMP3;
 import com.ec.nr.runners.script.RunScriptFactory;
 import com.ec.nr.runners.script.ScriptProcessingRunner;
-import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.workq.WorkQManager;
 
 @Service
@@ -22,7 +18,7 @@ public class SpreadsheetWatcher extends Thread {
 	private static Logger logger = LogManager.getLogger(SpreadsheetWatcher.class);
 	
 	@Autowired private WorkQManager workQ;
-	@Autowired private SpeakerSpreadsheet speakerSS;
+	@Autowired private MP3SpreadsheetService speakerSS;
 	@Autowired private RunScriptFactory scriptFactory;
 	
 	private int sleepTimeInterval;

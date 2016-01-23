@@ -3,7 +3,7 @@ package com.ec.nr.runners;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow.Field;
 import com.ec.nr.workq.WorkQManager;
@@ -14,7 +14,7 @@ public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 	
 	private String audioFileReference;
 	
-	public NewMP3AudoReceivedRunnable(SpeakerSpreadsheet ss, WorkQManager wqm, String audioFileReference, String audio) {
+	public NewMP3AudoReceivedRunnable(MP3SpreadsheetService ss, WorkQManager wqm, String audioFileReference, String audio) {
 		super(ss, wqm, audio);
 		this.audioFileReference = audioFileReference;
 		
@@ -30,7 +30,9 @@ public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 			logger.info("About to update the spreadsheet to 'Ready'...");
 			SpreadsheetDataRow data = getSpeakerSS().getAudioDetails(getId());
 			if (data.getFieldValue(Field.MP3_STATE) == null || data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("")) {
-				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, "Received");
+				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, "Receiving in Progress");
+				Thread.sleep(45000);
+				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, "Upload Complete");
 			} else {
 				logger.debug("Ignoring MP3:" + getId());
 			}

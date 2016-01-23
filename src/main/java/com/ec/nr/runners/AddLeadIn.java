@@ -2,7 +2,6 @@ package com.ec.nr.runners;
 
 import java.io.File;
 import java.io.SequenceInputStream;
-import java.nio.file.Paths;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;

@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ec.nr.sheets.creds.SpeakerSpreadsheet;
+import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.workq.WorkQManager;
 
 public abstract class AbstractAudioRunnable extends AudioRunnersBase implements
@@ -19,7 +19,7 @@ public abstract class AbstractAudioRunnable extends AudioRunnersBase implements
 	
 	public abstract String getSpreadsheetDurationField();
 	
-	public AbstractAudioRunnable(SpeakerSpreadsheet ss, WorkQManager wqm, String audioName) {
+	public AbstractAudioRunnable(MP3SpreadsheetService ss, WorkQManager wqm, String audioName) {
 		super(ss, wqm);
 		
 		id = audioName;
