@@ -40,14 +40,16 @@ public class SpreadsheetWatcher extends Thread {
 			for (String mp3 : mp3Statuses.keySet()) {
 				
 				String mp3Status = (mp3Statuses.get(mp3) == null) ? "" : mp3Statuses.get(mp3);
-				logger.trace("mp3 being evaluated:" + mp3 + "|" + mp3Status);
+				if (mp3Status != null && !"".equals(mp3Status))
+					logger.trace("mp3 being evaluated:" + mp3 + "|" + mp3Status);
 				
 				ScriptProcessingRunner runner = scriptFactory.getScriptRunner(mp3Status, mp3);
 				
 				if (runner != null) {
 					workQ.addAudio(runner);
 				} else {
-					logger.error("Not sure what to do with MP3 Id {} with status {}", mp3, mp3Status);
+					if (mp3Status != null && !"".equals(mp3Status))
+						logger.error("Not sure what to do with MP3 Id {} with status {}", mp3, mp3Status);
 				}
 				
 				/*switch (mp3Status) {

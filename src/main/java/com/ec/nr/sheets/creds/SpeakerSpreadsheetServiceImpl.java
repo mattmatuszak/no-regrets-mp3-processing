@@ -220,7 +220,8 @@ public class SpeakerSpreadsheetServiceImpl implements MP3SpreadsheetService {
 							String artist = attributes.getValue("firstname") + " " + attributes.getValue("lastname");
 							//String bypassLeadin = attributes.getValue("bypassleadin");
 							
-							logger.trace("Evaluating seminar..." + mp3Name + ":" + mp3State);
+							if (mp3State != null && !"".equals(mp3State))
+								logger.trace("Evaluating seminar..." + mp3Name + ":" + mp3State);
 							
 							mp3Statuses.put(mp3Name, mp3State);
 							

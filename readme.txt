@@ -61,6 +61,7 @@ To setup this app:
 8) Run the gradle build
    gradle compileJava assemble
 9) Copy to your lib directory (from the build/libs directory)
-10)Copy leadin and image to data directory
-10)Run the app at the command line:
+10)Copy leadin and image to data directory (from src/test/data)
+11)Copy the scripts to the scripts directory (from src/main/scripts)
+12)Run the app at the command line:
    java -jar ec-no-regrets-app-0.1.0.jar
