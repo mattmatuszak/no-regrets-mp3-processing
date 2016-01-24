@@ -14,7 +14,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'poc-spring-boot'
+    baseName = 'ec-no-regrets-app'
     version =  '0.1.0'
 }
 
@@ -26,18 +26,22 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-mainClassName = 'com.tooz.poc.gradle.boot.HelloWorld'
+mainClassName = 'com.ec.nr.App'
 
 version = '1.0'
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
+        attributes 'Implementation-Title': 'No Regrets MP3 Processor App',
+                   'Implementation-Version': '2016'
     }
 }
 
 repositories {
     mavenCentral()
+}
+
+configurations {
+    all*.exclude group: '', module: 'servlet-api'
 }
 
 dependencies {

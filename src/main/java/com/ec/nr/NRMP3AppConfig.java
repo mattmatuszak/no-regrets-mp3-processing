@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +15,9 @@ import com.ec.nr.watcher.LandingPadWatcher;
 import com.ec.nr.watcher.SpreadsheetWatcher;
 
 @Configuration
-@PropertySource("classpath:nr.properties")
+@PropertySource(value={"classpath:nr.properties","classpath:application.properties"})
 @ComponentScan("com.ec.nr")
+@EnableAutoConfiguration
 public class NRMP3AppConfig {
 
 	
