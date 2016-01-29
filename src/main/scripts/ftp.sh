@@ -25,7 +25,12 @@ echo "Pass:*********"
 
 echo ""
 echo "FTPing file to server..."
-###cp $sourceAudio $finalAudio
+export SSHPASS=CHANGEME
+sshpass -e sftp -oBatchMode=no -b - user@ip:port << !
+   cd /usr/src
+   put $sourceAudio
+   bye
+!
 echo "Finished FTPing to server."
 echo ""
 
