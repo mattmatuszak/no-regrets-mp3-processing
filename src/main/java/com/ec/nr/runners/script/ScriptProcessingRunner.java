@@ -3,6 +3,7 @@ package com.ec.nr.runners.script;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.ec.nr.runners.MP3Runnable;
 import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow;
+import com.ec.nr.sheets.creds.SpreadsheetDataRow.Field;
 
 public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 
@@ -30,11 +32,18 @@ public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 		this.scriptInfo = info;
 		this.spreadsheetService = spreadsheet;
 		setupWorkingFiles();
-		updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " Queued");
+		updateStatus(this.scriptInfo.getScriptAliasName() + " Queued");
 	}
 	
-	private void updateStatus(String id, String value) {
-		spreadsheetService.updateField(id, SpreadsheetDataRow.Field.MP3_STATE, value);
+	private void updateStatus(String value) {
+		spreadsheetService.updateField(this.getId(), SpreadsheetDataRow.Field.MP3_STATE, value);
+	}
+	
+	private void updateDuration(Long duration) {
+		
+		Field field = Field.fromUserFriendlyName(this.getScriptInfo().getScriptAliasName());
+		if (field != null)
+			spreadsheetService.updateField(this.getId(), field, String.valueOf(duration));
 	}
 	
 	protected DirectoryInfo getDirectoryInfo() {
@@ -116,21 +125,24 @@ public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 	public void run() {
 		try {
 			logger.info("Running command:" + buildCommand()[2]);
-			updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " In Progress");
+			updateStatus(this.scriptInfo.getScriptAliasName() + " In Progress");
+			long startTime = GregorianCalendar.getInstance().getTimeInMillis();
 			Process p = Runtime.getRuntime().exec(buildCommand());
 			int returnCode = p.waitFor();
-			logger.info("Completed running shell script.  Exit Value:" + returnCode);
-
+			long endTime = GregorianCalendar.getInstance().getTimeInMillis();
+			logger.info("Completed running shell script.  Exit Value:" + returnCode + " after " + (endTime-startTime));
+			updateDuration((endTime-startTime));
+			
 			if (returnCode == 0) {
 				// status = "Completed MP3 to WAV Conversion";
-				updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " Complete");
+				updateStatus(this.scriptInfo.getScriptAliasName() + " Complete");
 			} else {
 				logger.error("problems running command:" + Arrays.toString(buildCommand()));
 			}
 
 		} catch (Throwable e) {
 			logger.error("problems scrubbing the audio file with LAME: " + "", e);
-			updateStatus(this.scriptInfo.getId(), this.scriptInfo.getScriptAliasName() + " Errored");
+			updateStatus(this.scriptInfo.getScriptAliasName() + " Errored");
 			throw new Error("problems scrubbing the audio file with LAME: " + "", e);
 		}
 

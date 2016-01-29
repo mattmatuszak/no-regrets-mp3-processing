@@ -21,7 +21,7 @@ echo "Target Audio:" $targetAudio
 
 echo ""
 echo "removing silence..."
-sox $sourceAudio $targetAudio silence 1 0.1 1% -1 0.5 1%
+sox $sourceAudio $targetAudio silence 1 0.1 0.5% reverse silence 1 0.1 0.5% reverse
 echo "Finished removing silence."
 echo ""
 

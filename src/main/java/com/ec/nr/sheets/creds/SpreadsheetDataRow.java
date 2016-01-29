@@ -24,18 +24,40 @@ public class SpreadsheetDataRow {
 	}
 
 	public enum Field { 		
-		  SPEAKER_FIRST_NAME("firstname")
-		, SPEAKER_LAST_NAME("lastname")
-		, SPEAKER(null)
-		, SEMINAR("seminartitle")
-		, CONFERENCE(null)
-		, MP3_ID("mp3name")
-		, MP3_STATE("mp3State")
+		  SPEAKER_FIRST_NAME("firstname", "First Name")
+		, SPEAKER_LAST_NAME("lastname", "Last Name")
+		, SPEAKER(null, "Speaker")
+		, SEMINAR("seminartitle", "Seminar Title")
+		, CONFERENCE(null, "Conference")
+		, MP3_ID("mp3name", "MP3 Id")
+		, MP3_STATE("mp3State", "MP3 State")
+		, CONVERT_TO_MONO("converttomono", "Convert To Mono")
+		, AMPLIFY("amplify", "Amplify")
+		, REMOVE_SILENCE("removesilence", "Remove Silence")
+		, COPY_TO_USER_EDIT("copytouseredit", "Copy To User Edit")
+		, ADD_LEAD_IN("addleadin", "Add Lead In")
+		, TAG_MP3("tagmp3", "Tag MP3")
+		, COPY_TO_FINAL("copytofinal", "Copy To Final")
+		, FTP("ftp", "FTP")
 		;
 		private String fieldName;
+		private String userFriendlyName;
 		
-		private Field(String fieldName) {
+		private Field(String fieldName, String userFriendlyName) {
 			this.fieldName = fieldName;
+			this.userFriendlyName = userFriendlyName;
+		}
+		
+		public static Field fromUserFriendlyName(String friendlyId) {
+			
+			for (Field field : Field.values()) {
+				if (field.userFriendlyName.equals(friendlyId)) {
+					return field;
+				}
+			}
+			
+			return null;
+			
 		}
 		
 		public String getFieldName() {

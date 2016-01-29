@@ -36,7 +36,9 @@ To setup this app:
    sudo add-apt-repository ppa:cwchien/gradle
    sudo apt-get update
    sudo apt-get install gradle
-2) Install git: https://help.ubuntu.com/lts/serverguide/git.html
+2) Install git: http://askubuntu.com/questions/568591/how-do-i-install-the-latest-version-of-git-with-apt/568596
+   sudo apt-add-repository ppa:git-core/ppa
+   sudo apt-get update
    sudo apt-get install git
 3) Pull down the code and configure: https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository
    git clone https://github.com/mattmatuszak/no-regrets-mp3-processing.git
@@ -53,7 +55,9 @@ To setup this app:
    mkdir data
    mkdir final
    mkdir lib
-6) Setup the properties file in src/main/resources/nr.properties to point to the created directories above
+6) Setup the properties file in src/main/resources/nr.properties
+   Point to the directories created above
+   Update the number of threads to the number of cores - 1 
 7) Copy the Google Java files to the lib directory
    http://mvnrepository.com/artifact/com.google.gdata/core/1.47.1
    NOTE: Should look into this as opposed to using the old jars: https://github.com/google/google-api-java-client (the above seems to be required - at least for this code)

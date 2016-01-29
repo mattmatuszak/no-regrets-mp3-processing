@@ -22,7 +22,7 @@ import com.ec.nr.runners.script.RunScriptFactory;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(NRMP3AppConfig.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TestRunScript.class })
-@TestPropertySource(locations="classpath:testapplication.properties")
+@TestPropertySource(locations={"classpath:testapplication.properties"})
 public class TestRunScript extends AbstractTestExecutionListener {
 
 	@Autowired RunScriptFactory runScriptFactory;

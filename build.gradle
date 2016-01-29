@@ -49,10 +49,14 @@ dependencies {
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.0'
   	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.0'
   	
+  	compile group: 'com.google.gdata', name: 'core', version: '1.47.1'
+  	
   	compile 'com.google.api-client:google-api-client:1.21.0'
+  	
     compile 'com.google.oauth-client:google-oauth-client:1.21.0'
     compile 'com.google.oauth-client:google-oauth-client-java6:1.21.0'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.21.0'
+    
     compile 'com.google.apis:google-api-services-oauth2:v2-rev98-1.21.0'
     
   	compile fileTree(dir: 'lib', include: ['*.jar'])
