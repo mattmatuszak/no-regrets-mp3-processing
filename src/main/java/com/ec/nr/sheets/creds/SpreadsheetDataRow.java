@@ -2,14 +2,9 @@ package com.ec.nr.sheets.creds;
 
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import com.google.gdata.data.spreadsheet.CustomElementCollection;
 
 public class SpreadsheetDataRow {
-	
-	@Value( "${mp3.album.title}" )
-	String conferenceName;
 	
 	private HashMap<Field, String> attributes;
 	
@@ -21,6 +16,7 @@ public class SpreadsheetDataRow {
 		this.attributes.put(Field.SEMINAR, attributes.getValue(Field.SEMINAR.getFieldName()));
 		this.attributes.put(Field.SPEAKER_FIRST_NAME, attributes.getValue(Field.SPEAKER_FIRST_NAME.getFieldName()));
 		this.attributes.put(Field.SPEAKER_LAST_NAME, attributes.getValue(Field.SPEAKER_LAST_NAME.getFieldName()));
+		this.attributes.put(Field.CONFERENCE, attributes.getValue(Field.CONFERENCE.getFieldName()));
 	}
 
 	public enum Field { 		
@@ -28,7 +24,7 @@ public class SpreadsheetDataRow {
 		, SPEAKER_LAST_NAME("lastname", "Last Name")
 		, SPEAKER(null, "Speaker")
 		, SEMINAR("seminartitle", "Seminar Title")
-		, CONFERENCE(null, "Conference")
+		, CONFERENCE("conference", "Conference")
 		, MP3_ID("mp3name", "MP3 Id")
 		, MP3_STATE("mp3State", "MP3 State")
 		, CONVERT_TO_MONO("converttomono", "Convert To Mono")
@@ -70,8 +66,6 @@ public class SpreadsheetDataRow {
 		switch (field) {
 		case SPEAKER:
 			return this.attributes.get(Field.SPEAKER_FIRST_NAME) + " " + this.attributes.get(Field.SPEAKER_LAST_NAME);
-		case CONFERENCE:
-			return conferenceName;
 		default:
 			return this.attributes.get(field);
 		}
