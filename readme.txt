@@ -74,3 +74,5 @@ To setup this app:
 *** Enhancements for 2017 ***
 1) 48 ... check for 48 sample rate, and if not downgrade it
 2) Cleanup if we revert...first step to check for pre and post user edit files, and if found delete the files
+3) Have the app check for the dependent directories, and if not found, create the directories rather than having this info in the properties file
+4) fix the profiles...for test, integration test, and live
