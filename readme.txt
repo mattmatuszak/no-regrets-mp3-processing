@@ -69,3 +69,8 @@ To setup this app:
 11)Copy the scripts to the scripts directory (from src/main/scripts)
 12)Run the app at the command line:
    java -jar ec-no-regrets-app-0.1.0.jar
+
+
+*** Enhancements for 2017 ***
+1) 48 ... check for 48 sample rate, and if not downgrade it
+2) Cleanup if we revert...first step to check for pre and post user edit files, and if found delete the files
