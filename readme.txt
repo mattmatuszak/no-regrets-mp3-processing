@@ -77,3 +77,4 @@ To setup this app:
 3) Have the app check for the dependent directories, and if not found, create the directories rather than having this info in the properties file
 4) fix the profiles...for test, integration test, and live
 5) Add alert or notification when landingpad or spreadsheet watcher terminates and then automatically restart
+6) Update code to use the sox stat command to judge the quality of the audio before and after
