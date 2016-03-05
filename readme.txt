@@ -78,3 +78,5 @@ To setup this app:
 4) fix the profiles...for test, integration test, and live
 5) Add alert or notification when landingpad or spreadsheet watcher terminates and then automatically restart
 6) Update code to use the sox stat command to judge the quality of the audio before and after
+7) Handle blank name in name
+8) Communication errors are breaking the watcher loop
