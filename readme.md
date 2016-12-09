@@ -19,72 +19,74 @@ Now for the technical stuff that this project depends on and how we use it.
 
 ###To follow the above process, we need to setup our server correctly, so here we go (assuming you are running ubuntu server):
 
-1. [Lame Setup Reference](http://wiki.audacityteam.org/wiki/Lame_Installation)<br />
-   ```
-   sudo apt-get install lame libmp3lame0
-   ```
-2. [SOX Setup Reference](http://superuser.com/questions/421153/how-to-add-a-mp3-handler-to-sox/421168)<br />
-   ```
-   sudo apt-get install sox
-   sudo apt-get install libsox-fmt-mp3
-   ```
-3. [Java 8 Setup Reference](https://help.ubuntu.com/community/Java#Oracle_Java_8)
+- [Lame Setup Reference](http://wiki.audacityteam.org/wiki/Lame_Installation)<br />
+```
+sudo apt-get install lame libmp3lame0
+```
+- [SOX Setup Reference](http://superuser.com/questions/421153/how-to-add-a-mp3-handler-to-sox/421168)<br />
+```
+sudo apt-get install sox
+sudo apt-get install libsox-fmt-mp3
+```
+- [Java 8 Setup Reference](https://help.ubuntu.com/community/Java#Oracle_Java_8)<br />
    [Method I used](http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html)<br />
-   ```
-   sudo add-apt-repository ppa:webupd8team/java
-   sudo apt-get update
-   sudo apt-get install oracle-java8-installer
-   ```
+```
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+```
 
 ###To setup this app:
 
-1. Install gradle: http://askubuntu.com/questions/328178/gradle-in-ubuntu<br />
-   ```
-   sudo add-apt-repository ppa:cwchien/gradle
-   sudo apt-get update
-   sudo apt-get install gradle
-   ```
-2. Install git: http://askubuntu.com/questions/568591/how-do-i-install-the-latest-version-of-git-with-apt/568596<br />
-   ```
-   sudo apt-add-repository ppa:git-core/ppa
-   sudo apt-get update
-   sudo apt-get install git
-   ```
-3. Pull down the code and configure: https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository
-   git clone https://github.com/mattmatuszak/no-regrets-mp3-processing.git
-4. Setup your user info (lot to talk about here...but not now)
+- [Install gradle](http://askubuntu.com/questions/328178/gradle-in-ubuntu)<br />
+```
+sudo add-apt-repository ppa:cwchien/gradle
+sudo apt-get update
+sudo apt-get install gradle
+```
+- [Install git](http://askubuntu.com/questions/568591/how-do-i-install-the-latest-version-of-git-with-apt/568596)<br />
+```
+sudo apt-add-repository ppa:git-core/ppa
+sudo apt-get update
+sudo apt-get install git
+```
+- [Pull down the code and configure](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
+```
+git clone https://github.com/mattmatuszak/no-regrets-mp3-processing.git
+```
+- Setup your user info (lot to talk about here...but not now)
    copy to the src/main/resources/userInfo.json
-5. Create the directories required (need to decide where to run this app from)<br />
-   ```
-   mkdir landingpad
-   mkdir creds
-   mkdir scripts
-   mkdir preuseredit
-   mkdir useredit
-   mkdir postuseredit
-   mkdir logs
-   mkdir data
-   mkdir final
-   mkdir lib
-   ```
-6. Setup the properties file in src/main/resources/nr.properties
+- Create the directories required (need to decide where to run this app from)<br />
+```
+mkdir landingpad
+mkdir creds
+mkdir scripts
+mkdir preuseredit
+mkdir useredit
+mkdir postuseredit
+mkdir logs
+mkdir data
+mkdir final
+mkdir lib
+```
+- Setup the properties file in src/main/resources/nr.properties
    Point to the directories created above
    Update the number of threads to the number of cores - 1 
-7. Copy the Google Java files to the lib directory
+- Copy the Google Java files to the lib directory
    http://mvnrepository.com/artifact/com.google.gdata/core/1.47.1
    NOTE: Should look into this as opposed to using the old jars: https://github.com/google/google-api-java-client (the above seems to be required - at least for this code)
-   NOTE: https://developers.google.com/google-apps/spreadsheets/
-8. Run the gradle build<br />
-   ```
-   gradle compileJava assemble
-   ```
-9. Copy to your lib directory (from the build/libs directory)
-10.Copy leadin and image to data directory (from src/test/data)
-11.Copy the scripts to the scripts directory (from src/main/scripts)
-12.Run the app at the command line:<br />
-   ```
-   java -jar ec-no-regrets-app-0.1.0.jar
-   ```
+   [NOTE](https://developers.google.com/google-apps/spreadsheets)
+- Run the gradle build<br />
+```
+gradle compileJava assemble
+```
+- Copy to your lib directory (from the build/libs directory)
+- Copy leadin and image to data directory (from src/test/data)
+- Copy the scripts to the scripts directory (from src/main/scripts)
+- Run the app at the command line:<br />
+```
+java -jar ec-no-regrets-app-0.1.0.jar
+```
 
 
 ###*** Enhancements for 2017 ***
