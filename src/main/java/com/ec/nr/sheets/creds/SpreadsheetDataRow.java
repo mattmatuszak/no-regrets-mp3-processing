@@ -1,24 +1,29 @@
 package com.ec.nr.sheets.creds;
 
 import java.util.HashMap;
+import java.util.List;
 
-import com.google.gdata.data.spreadsheet.CustomElementCollection;
 
 public class SpreadsheetDataRow {
 	
 	private HashMap<Field, String> attributes;
 	
-	protected SpreadsheetDataRow(CustomElementCollection attributes) {
+	protected SpreadsheetDataRow(List<Object> headers, List<Object> attributes) {
 		this.attributes = new HashMap<>();
 		
-		this.attributes.put(Field.MP3_ID, attributes.getValue(Field.MP3_ID.getFieldName()));
-		this.attributes.put(Field.MP3_STATE, attributes.getValue(Field.MP3_STATE.getFieldName()));
-		this.attributes.put(Field.SEMINAR, attributes.getValue(Field.SEMINAR.getFieldName()));
-		this.attributes.put(Field.SPEAKER_FIRST_NAME, attributes.getValue(Field.SPEAKER_FIRST_NAME.getFieldName()));
-		this.attributes.put(Field.SPEAKER_LAST_NAME, attributes.getValue(Field.SPEAKER_LAST_NAME.getFieldName()));
-		this.attributes.put(Field.CONFERENCE, attributes.getValue(Field.CONFERENCE.getFieldName()));
+		for (int headerIndex = 0; headerIndex < headers.size(); headerIndex++) {
+			
+			Field headerField = Field.fromUserFriendlyName(String.valueOf(headers.get(headerIndex)));
+			
+			if (headerField != null) {
+				if (attributes.size() <= headerIndex) {
+					this.attributes.put(headerField, String.valueOf(attributes.get(headerIndex)));
+				}
+			}
+			
+		}
 	}
-
+	
 	public enum Field { 		
 		  SPEAKER_FIRST_NAME("firstname", "First Name")
 		, SPEAKER_LAST_NAME("lastname", "Last Name")
@@ -46,9 +51,12 @@ public class SpreadsheetDataRow {
 		
 		public static Field fromUserFriendlyName(String friendlyId) {
 			
-			for (Field field : Field.values()) {
-				if (field.userFriendlyName.equals(friendlyId)) {
-					return field;
+			if (friendlyId != null) {
+			
+				for (Field field : Field.values()) {
+					if (field.userFriendlyName.equals(friendlyId)) {
+						return field;
+					}
 				}
 			}
 			
@@ -56,9 +64,14 @@ public class SpreadsheetDataRow {
 			
 		}
 		
+		public String getUserFriendlyName() {
+			return this.userFriendlyName;
+		}
+		
 		public String getFieldName() {
 			return this.fieldName;
 		}
+		
 	}
 	
 	public String getFieldValue(Field field) {
