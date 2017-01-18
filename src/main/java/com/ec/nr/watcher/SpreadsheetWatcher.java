@@ -51,24 +51,6 @@ public class SpreadsheetWatcher extends Thread {
 					//if (mp3Status != null && !"".equals(mp3Status))
 					//	logger.error("Not sure what to do with MP3 Id {} with status {}", mp3, mp3Status);
 				}
-				
-				/*switch (mp3Status) {
-					case "x":
-					case "X":
-						workQ.addAudio(new ConvertMP3ToWav(mp3));
-						break;
-						
-					case "Completed MP3 to WAV Conversion":
-						workQ.addAudio(new AddLeadIn(mp3));
-						break;
-					
-					case "Completed Adding Leadin":
-						workQ.addAudio(new ConvertToMP3(mp3));
-						break;
-	
-					default:
-						break;
-				}*/
 			}
 			
 			

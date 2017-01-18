@@ -2,25 +2,27 @@ package com.ec.nr.sheets.creds;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.ec.nr.sheets.creds.SpreadsheetRange.ColumnIndexLetter;
 
 
 public class SpreadsheetDataRow {
 	
 	private HashMap<Field, String> attributes;
 	
-	protected SpreadsheetDataRow(List<Object> headers, List<Object> attributes) {
+	protected SpreadsheetDataRow(SpreadsheetRange range, List<Object> attributes) {
 		this.attributes = new HashMap<>();
 		
-		for (int headerIndex = 0; headerIndex < headers.size(); headerIndex++) {
-			
-			Field headerField = Field.fromUserFriendlyName(String.valueOf(headers.get(headerIndex)));
-			
-			if (headerField != null) {
-				if (attributes.size() <= headerIndex) {
-					this.attributes.put(headerField, String.valueOf(attributes.get(headerIndex)));
-				}
-			}
-			
+		for (Map.Entry<Field, ColumnIndexLetter> entry : range.getFieldToColumnLetterMap().entrySet()) {
+			this.attributes.put
+			(
+					entry.getKey()
+					, String.valueOf(
+							(attributes.size() > entry.getValue().getColumnIndex()) 
+							? attributes.get(entry.getValue().getColumnIndex()) 
+							: null)
+			);
 		}
 	}
 	
@@ -84,5 +86,9 @@ public class SpreadsheetDataRow {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return this.attributes.toString();
+	}
 	
 }

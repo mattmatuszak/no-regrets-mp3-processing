@@ -11,7 +11,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'ec-no-regrets-app'
@@ -52,18 +52,6 @@ dependencies {
   	compile 'com.google.api-client:google-api-client:1.22.0'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
     compile 'com.google.apis:google-api-services-sheets:v4-rev38-1.22.0'
-  	
-  	//compile group: 'com.google.gdata', name: 'core', version: '1.47.1'
-  	
-  	//compile 'com.google.api-client:google-api-client:1.21.0'
-  	
-    //compile 'com.google.oauth-client:google-oauth-client:1.21.0'
-    //compile 'com.google.oauth-client:google-oauth-client-java6:1.21.0'
-    //compile 'com.google.oauth-client:google-oauth-client-jetty:1.21.0'
-    
-    //compile 'com.google.apis:google-api-services-oauth2:v2-rev98-1.21.0'
-    
-  	//compile fileTree(dir: 'lib', include: ['*.jar'])
 
 	// tag::jetty[]
     compile("org.springframework.boot:spring-boot-starter-web") {
@@ -75,6 +63,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
     
+    compile("org.springframework.boot:spring-boot-devtools")
     
     compile (
     	[group: 'commons-collections', name: 'commons-collections', version: '3.2']

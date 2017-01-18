@@ -3,6 +3,7 @@ package com.ec.nr;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -15,21 +16,15 @@ import com.ec.nr.watcher.LandingPadWatcher;
 import com.ec.nr.watcher.SpreadsheetWatcher;
 
 @Configuration
-@PropertySource(value={"classpath:nr.properties","classpath:application.properties"})
 @ComponentScan("com.ec.nr")
 @EnableAutoConfiguration
 public class NRMP3AppConfig {
 
-	
-	
-	
-	
-	@Value( "${mp3landingpad.watcher.directory}" )
-	private String pathToWatch;
+	@Autowired NREnvironment nrEnvironment;
 	
 	@Bean
 	public LandingPadWatcher landingPadWatcher() {
-		return new LandingPadWatcher(pathToWatch);
+		return new LandingPadWatcher(nrEnvironment.LANDING_PAD_DIR);
 	}
 	
 	
@@ -43,7 +38,7 @@ public class NRMP3AppConfig {
 	}
 	
 	
-	@Value("${WorkQThreadQExecutor.numberOfThreads}")
+	@Value("${MP3_PROCESSING_THREADS:3}")
 	private int numberOfThreads;
 	
 	@Bean
@@ -51,20 +46,13 @@ public class NRMP3AppConfig {
 		return java.util.concurrent.Executors.newFixedThreadPool(numberOfThreads);
 	}
 	
-	
-	@Value("${speaker.spreadsheet.credentialDirectory}")
-	private String credentialDirectoryName;
-	
 	@Bean 
 	public File credentialDirectory() {
-		return new File(credentialDirectoryName);
+		return new File(nrEnvironment.SPREADSHEET_OAUTH2_DIR);
 	}
 	
 	
-	@Bean
-	public NREnvironment nrEnvironment() {
-		return new NREnvironment();
-	}
+	
 	
 	
 }

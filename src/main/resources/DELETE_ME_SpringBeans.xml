@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
  
-    <bean id="WatcherManager" class="com.ec.nr.watcher.WatcherManager" init-method="startWatchers">
+    <!--<bean id="WatcherManager" class="com.ec.nr.watcher.WatcherManager" init-method="startWatchers">
 		    <property name="ssWatcher" ref="SpreadsheetWatcher" />
 		    <property name="landingpadWatcher" ref="MP3Watcher" />
 		    <property name="workQManager" ref="WorkQManager" />
@@ -30,21 +30,21 @@
 	
 	<bean name="credentialDirectory" class="java.io.File">
 		<constructor-arg>
-			<value>/home/ubuntu/oauth2_nr2015</value>
+			<value>/home/ubuntu/oauth2_nr2017</value>
 		</constructor-arg>
 	</bean>
 			
-	<bean name="SpeakerSpreadsheet" class="com.ec.nr.sheets.creds.SpeakerSpreadsheet" init-method="initialize">
+	 <bean name="SpeakerSpreadsheet" class="com.ec.nr.sheets.creds.SpeakerSpreadsheet" init-method="initialize">
 		<property name="applicationName" value="NoRegrets-MP3/1.0" />
 		<property name="credentialDirectory" ref="credentialDirectory" />
 		<property name="userInfo" value="/userInfo.json" />
 	</bean>
-	
+	 -->
 	<!-- <bean name="defaultMP3AudioReceivedRunnable" class="com.ec.nr.runners.NewMP3AudoReceivedRunnable">
 		<property name="speakerData" ref="SpeakerSpreadsheet" />
 	</bean>
 	-->
-	<bean name="audioRunnersBase" class="com.ec.nr.runners.AudioRunnersBase">
+	<!-- <bean name="audioRunnersBase" class="com.ec.nr.runners.AudioRunnersBase">
 		<property name="scriptsDirectory" value="/media/pi/remainder/NR/JavaTesting/Scripts" />
 		<property name="workingAudioDirectory" value="/media/pi/remainder/NR/JavaTesting/SysWorking" />
 		<property name="logsDirectory" value="/media/pi/remainder/NR/JavaTesting/Logs" />
@@ -55,5 +55,5 @@
 		<property name="speakerSS" ref="SpeakerSpreadsheet" />
 		<property name="workQManager" ref="WorkQManager" />
 	</bean>
-  
+   -->
 </beans>

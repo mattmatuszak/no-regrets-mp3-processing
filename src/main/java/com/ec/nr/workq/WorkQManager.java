@@ -18,31 +18,16 @@ public class WorkQManager {
 	
 	@Autowired private ExecutorService executor;
 	
-	//private HashMap<String, String> lockedMP3s = new HashMap<String, String>();
-
-
 	private WorkQManager() {
 		logger.info("Created WorkQExecutor");
 	}
 	
 	public void addAudio(MP3Runnable runner) {
 		
-		//if (lockedMP3s.containsKey(runner.getId())) {
-		//	logger.debug("MP3 is already on the queue..." + runner.getId() + " ignoring.");
-		//} else {
-		//	lockedMP3s.put(runner.getId(), runner.getClass().getName());
 			executor.execute(runner);
-		//}
 	}
 	
 	public void audioComplete(MP3Runnable runner) {
-		//if (lockedMP3s.containsKey(runner.getId())) {
-		//	logger.debug("Removing from the queue..." + runner.getId() + ".");
-		//	lockedMP3s.remove(runner.getId());
-		//} else {
-			
-		//	logger.error("MP3 is not on the queue...please investigate!..." + runner.getId());
-		//}
 	}
 	
 	public boolean waitTillQueueIsDrained() {
@@ -56,7 +41,6 @@ public class WorkQManager {
 	}
 		
 	public int getWorkQDepth() {
-		//return lockedMP3s.size();
 		return -1;
 	}
 

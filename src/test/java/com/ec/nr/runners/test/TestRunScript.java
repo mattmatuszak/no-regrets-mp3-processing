@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
@@ -20,7 +22,7 @@ import com.ec.nr.runners.script.ScriptProcessingRunner;
 import com.ec.nr.runners.script.RunScriptFactory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(NRMP3AppConfig.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TestRunScript.class })
 @TestPropertySource(locations={"classpath:testapplication.properties"})
 public class TestRunScript extends AbstractTestExecutionListener {
@@ -33,9 +35,9 @@ public class TestRunScript extends AbstractTestExecutionListener {
 		
 		NREnvironment env = testContext.getApplicationContext().getBean(NREnvironment.class);
 		
-		FileUtils.cleanDirectory(new File(env.PRE_USER_EDIT_DIR));
+		FileUtils.cleanDirectory(new File(env.PRE_EDIT_DIR));
 		FileUtils.cleanDirectory(new File(env.USER_EDIT_DIR));
-		FileUtils.cleanDirectory(new File(env.POST_USER_EDIT_DIR));
+		FileUtils.cleanDirectory(new File(env.POST_EDIT_DIR));
 		FileUtils.cleanDirectory(new File(env.LOGS_DIR));
 		FileUtils.cleanDirectory(new File(env.FINAL_AUDIO_DIR));
 	}

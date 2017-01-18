@@ -28,7 +28,7 @@ public class RunScriptFactory {
 		case "Upload Complete":
 			return new ScriptProcessingRunner
 					(
-							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo("convertToMono.sh", "Convert To Mono", mp3Id, null)
 							, spreadsheet
 					);
@@ -36,7 +36,7 @@ public class RunScriptFactory {
 		case "Convert To Mono Complete":
 			return new ScriptProcessingRunner
 					(
-							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null)
 							, spreadsheet
 					);
@@ -44,7 +44,7 @@ public class RunScriptFactory {
 		case "Amplify Complete":
 			return new ScriptProcessingRunner
 					(
-							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null)
 							, spreadsheet
 					);
@@ -52,7 +52,7 @@ public class RunScriptFactory {
 		case "Remove Silence Complete":
 			return new CopyRunner
 					(
-							new DirectoryInfo(env.PRE_USER_EDIT_DIR, env.USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.PRE_EDIT_DIR, env.USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
 									"copy.sh" 
@@ -67,7 +67,7 @@ public class RunScriptFactory {
 		case "d":
 			return new ScriptProcessingRunner
 					(
-							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
 									"addLeadIn.sh"
@@ -84,7 +84,7 @@ public class RunScriptFactory {
 			
 			return new ScriptProcessingRunner
 					(
-							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
 								"tagMP3.sh"
@@ -101,7 +101,7 @@ public class RunScriptFactory {
 		case "Tag MP3 Complete": 
 			return new CopyRunner
 					(
-							new DirectoryInfo(env.POST_USER_EDIT_DIR, env.FINAL_AUDIO_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.POST_EDIT_DIR, env.FINAL_AUDIO_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
 									"copy.sh"

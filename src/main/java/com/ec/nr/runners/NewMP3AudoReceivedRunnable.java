@@ -29,6 +29,7 @@ public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 		try {
 			logger.info("About to update the spreadsheet to 'Ready'...");
 			SpreadsheetDataRow data = getSpeakerSS().getAudioDetails(getId());
+			logger.trace("spreadsheet data row:{}", data);
 			if (data.getFieldValue(Field.MP3_STATE) == null || data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("")
 					|| data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("Not Received")) {
 				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, "Receiving in Progress");
