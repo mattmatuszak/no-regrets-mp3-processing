@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
 
@@ -12,10 +13,15 @@ apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'docker'
 
 jar {
     baseName = 'ec-no-regrets-app'
-    version =  '0.1.0'
+    version =  '2017.1.0'
+    manifest {
+        attributes 'Implementation-Title': 'No Regrets MP3 Processor App',
+                   'Implementation-Version': '2017'
+    }
 }
 
 repositories {
@@ -28,20 +34,26 @@ targetCompatibility = 1.8
 
 mainClassName = 'com.ec.nr.App'
 
-version = '1.0'
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'No Regrets MP3 Processor App',
-                   'Implementation-Version': '2016'
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
 configurations {
     all*.exclude group: '', module: 'servlet-api'
+}
+
+version = '1.0'
+
+task buildDocker(type: Docker, dependsOn: build) {
+  push = false
+  applicationName = jar.baseName
+  dockerfile = file('src/main/docker/Dockerfile')
+  doFirst {
+    copy {
+      from jar
+      into stageDir
+    }
+  }
 }
 
 dependencies {

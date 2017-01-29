@@ -59,8 +59,11 @@ public class NREnvironment {
 	@Value("${SPREADSHEET_OAUTH2_DIR:" + DEFAULT_DIR + "/spreadsheet/oauth2}")
 	public String SPREADSHEET_OAUTH2_DIR;
 	
-	@Value("${SPREADSHEET_OAUTH2_USER_INFO:" + DEFAULT_DIR + "/userInfo.json}")
-	public String SPREADSHEET_OAUTH2_USER_INFO;
+	@Value("${SPREADSHEET_OAUTH2_USER_INFO_DIR:" + DEFAULT_DIR + "/userInfo}")
+	public String SPREADSHEET_OAUTH2_USER_INFO_DIR;
+	
+	@Value("${SPREADSHEET_OAUTH2_USER_INFO_NAME:userInfo.json}")
+	public String SPREADSHEET_OAUTH2_USER_NAME;
 	
 	
 	@PostConstruct
@@ -84,14 +87,14 @@ public class NREnvironment {
 		FileUtils.cleanDirectory(new File(DATA_DIR));
 		
 		Resource[] dataFiles = 
-				(new PathMatchingResourcePatternResolver()).getResources("classpath:/data/*.*");
+				(new PathMatchingResourcePatternResolver()).getResources("classpath*:/data/*.*");
 			
 			for (int dataFileIndex = 0; dataFileIndex < dataFiles.length; dataFileIndex++) {
 				Resource dataFileFromApp = dataFiles[dataFileIndex];
 				
-				FileUtils.copyFile
+				FileUtils.copyInputStreamToFile
 				(
-					  dataFileFromApp.getFile()
+					  dataFileFromApp.getInputStream()
 					, new File(DATA_DIR + "/" + dataFileFromApp.getFilename())
 				);
 			}
@@ -102,14 +105,14 @@ public class NREnvironment {
 		FileUtils.cleanDirectory(new File(SCRIPTS_DIR));
 		
 		Resource[] scripts = 
-			(new PathMatchingResourcePatternResolver()).getResources("classpath:/scripts/*.sh");
+			(new PathMatchingResourcePatternResolver()).getResources("classpath*:/scripts/*.sh");
 		
 		for (int scriptResourceIndex = 0; scriptResourceIndex < scripts.length; scriptResourceIndex++) {
 			Resource scriptFromApp = scripts[scriptResourceIndex];
 			
-			FileUtils.copyFile
+			FileUtils.copyInputStreamToFile
 			(
-				  scriptFromApp.getFile()
+				  scriptFromApp.getInputStream()
 				, new File(SCRIPTS_DIR + "/" + scriptFromApp.getFilename())
 			);
 		}

@@ -7,9 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +35,6 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
-import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 @Service
@@ -98,7 +95,11 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService {
 			Map<Field, SpreadsheetRange.ColumnIndexLetter> rangeMapping = new HashMap<>();
 			for (int columnIndex = 0; columnIndex < rows.get(0).size(); columnIndex++) {
 				Field column = SpreadsheetDataRow.Field.fromUserFriendlyName(String.valueOf(rows.get(0).get(columnIndex)));
-				rangeMapping.put(column, new SpreadsheetRange.ColumnIndexLetter(String.valueOf((char) (65+columnIndex)), columnIndex));
+				if (column == null) {
+					logger.info("IGNORING field:".concat(String.valueOf(rows.get(0).get(columnIndex))));
+				} else { 
+					rangeMapping.put(column, new SpreadsheetRange.ColumnIndexLetter(String.valueOf((char) (65+columnIndex)), columnIndex));
+				}
 			}
 			
 			this.allSpreadsheetRange = new SpreadsheetRange(allRange, rangeMapping);
@@ -134,7 +135,7 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService {
     
     private Credential authorize() throws IOException {
         // Load client secrets.
-        InputStream in = new FileInputStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO);
+        InputStream in = new FileInputStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO_DIR + "/" + nrEnvironment.SPREADSHEET_OAUTH2_USER_NAME);
             //SpeakerSheetsAPIv4Impl.class.getResourceAsStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO);
         GoogleClientSecrets clientSecrets =
             GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));

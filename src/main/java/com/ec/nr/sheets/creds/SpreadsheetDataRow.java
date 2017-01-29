@@ -56,7 +56,7 @@ public class SpreadsheetDataRow {
 			if (friendlyId != null) {
 			
 				for (Field field : Field.values()) {
-					if (field.userFriendlyName.equals(friendlyId)) {
+					if (field.userFriendlyName.equalsIgnoreCase(friendlyId)) {
 						return field;
 					}
 				}
