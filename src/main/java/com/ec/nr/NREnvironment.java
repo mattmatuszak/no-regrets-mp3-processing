@@ -1,12 +1,16 @@
 package com.ec.nr;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -60,7 +64,7 @@ public class NREnvironment {
 	
 	
 	@PostConstruct
-	public void init() {
+	public void init() throws Exception {
 		initDirectory(LANDING_PAD_DIR);
 		initDirectory(LANDING_PAD_ARCHIVE_DIR);
 		initDirectory(SCRIPTS_DIR);
@@ -71,6 +75,54 @@ public class NREnvironment {
 		initDirectory(USER_EDIT_DIR);
 		initDirectory(POST_EDIT_DIR);
 		initDirectory(SPREADSHEET_OAUTH2_DIR);
+		extractScripts();
+		extractData();
+	}
+	
+	private void extractData() throws Exception {
+		
+		FileUtils.cleanDirectory(new File(DATA_DIR));
+		
+		Resource[] dataFiles = 
+				(new PathMatchingResourcePatternResolver()).getResources("classpath:/data/*.*");
+			
+			for (int dataFileIndex = 0; dataFileIndex < dataFiles.length; dataFileIndex++) {
+				Resource dataFileFromApp = dataFiles[dataFileIndex];
+				
+				FileUtils.copyFile
+				(
+					  dataFileFromApp.getFile()
+					, new File(DATA_DIR + "/" + dataFileFromApp.getFilename())
+				);
+			}
+	}
+	
+	private void extractScripts() throws IOException, InterruptedException {
+		
+		FileUtils.cleanDirectory(new File(SCRIPTS_DIR));
+		
+		Resource[] scripts = 
+			(new PathMatchingResourcePatternResolver()).getResources("classpath:/scripts/*.sh");
+		
+		for (int scriptResourceIndex = 0; scriptResourceIndex < scripts.length; scriptResourceIndex++) {
+			Resource scriptFromApp = scripts[scriptResourceIndex];
+			
+			FileUtils.copyFile
+			(
+				  scriptFromApp.getFile()
+				, new File(SCRIPTS_DIR + "/" + scriptFromApp.getFilename())
+			);
+		}
+		
+		String[] cmd = 
+			{
+				"/bin/sh"
+				, "-c"
+				, "chmod 554 " + SCRIPTS_DIR + "/*.sh " 
+			};
+		
+		Process p = Runtime.getRuntime().exec(cmd);
+		int returnCode = p.waitFor();
 	}
 	
 	private void initDirectory(String directoryName) {
