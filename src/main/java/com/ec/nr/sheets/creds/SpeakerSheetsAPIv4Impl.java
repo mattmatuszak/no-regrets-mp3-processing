@@ -25,9 +25,13 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
@@ -38,7 +42,7 @@ import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 @Service
-public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService {
+public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService, SheetConnectionSerivce {
 
 	private static final Logger logger = LogManager.getLogger(SpeakerSheetsAPIv4Impl.class);
 	
@@ -73,9 +77,9 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService {
     		
             httpTransport = GoogleNetHttpTransport.newTrustedTransport();
             dataStoreFactory = new FileDataStoreFactory(new File(nrEnvironment.SPREADSHEET_OAUTH2_DIR));
-            sheetService = getSheetsService();
+            //sheetService = getSheetsService();
             
-            mapFieldToColumnLetter();
+            //mapFieldToColumnLetter();
             
         } catch (Throwable t) {
         	System.err.println("problems accessing the spreadsheet...see trace below!!");
@@ -127,13 +131,42 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService {
     }
     
     private Sheets getSheetsService() throws IOException {
-        Credential credential = authorize();
+        Credential credential = authorizeViaConsole();
         return new Sheets.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(applicationName)
                 .build();
     }
     
-    private Credential authorize() throws IOException {
+    
+    private Credential authorizeViaSomethingElse(String authCode) throws IOException {
+    	// Load client secrets.
+        InputStream in = new FileInputStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO_DIR + "/" + nrEnvironment.SPREADSHEET_OAUTH2_USER_NAME);
+            //SpeakerSheetsAPIv4Impl.class.getResourceAsStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO);
+        GoogleClientSecrets clientSecrets =
+            GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+        
+    	GoogleTokenResponse tokenResponse =
+    	          new GoogleAuthorizationCodeTokenRequest(
+    	              new NetHttpTransport(),
+    	              JacksonFactory.getDefaultInstance(),
+    	              "https://www.googleapis.com/oauth2/v4/token",
+    	              clientSecrets.getDetails().getClientId(),
+    	              clientSecrets.getDetails().getClientSecret(),
+    	              authCode,
+    	              "")  // Specify the same redirect URI that you use with your web
+    	                             // app. If you don't have a web version of your app, you can
+    	                             // specify an empty string.
+    	              .execute();
+
+    	String accessToken = tokenResponse.getAccessToken();
+
+    	// Use access token to call API
+    	GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
+    	return credential;
+    }
+    
+    
+    private Credential authorizeViaConsole() throws IOException {
         // Load client secrets.
         InputStream in = new FileInputStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO_DIR + "/" + nrEnvironment.SPREADSHEET_OAUTH2_USER_NAME);
             //SpeakerSheetsAPIv4Impl.class.getResourceAsStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO);
@@ -257,6 +290,13 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public boolean connect() throws Exception {
+		sheetService = getSheetsService();
+		mapFieldToColumnLetter();
+		return true;
 	}
 
 }
