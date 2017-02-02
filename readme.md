@@ -19,6 +19,8 @@ Now for the technical stuff that this project depends on and how we use it.
 
 ###To follow the above process, we need to setup our server correctly, so here we go (assuming you are running ubuntu server):
 
+####Note: I've containerized this app with docker to reduce most of the config below, but no time to update the instructions below.  When I get a chance before Feb 4, 2017, I will.
+
 - [Lame Setup Reference](http://wiki.audacityteam.org/wiki/Lame_Installation)<br />
 ```
 sudo apt-get install lame libmp3lame0
