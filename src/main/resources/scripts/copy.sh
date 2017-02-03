@@ -21,7 +21,7 @@ echo "Target Audio:" $finalAudio
 
 echo ""
 echo "Copying..."
-cp $sourceAudio $finalAudio
+cp $sourceAudio "$finalAudio"
 echo "Finished Copying."
 echo ""
 

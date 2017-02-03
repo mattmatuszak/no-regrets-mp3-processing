@@ -8,11 +8,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ec.nr.NRMP3AppConfig;
 import com.ec.nr.runners.MP3Runnable;
 
 @Service
 public class WorkQManager {
 	
+	@Autowired NRMP3AppConfig config;
 	
 	private static Logger logger = LogManager.getLogger(WorkQManager.class);
 	
@@ -24,6 +26,8 @@ public class WorkQManager {
 	
 	public void addAudio(MP3Runnable runner) {
 		
+			if (executor.isShutdown() || executor.isTerminated())
+				executor = config.executor();
 			executor.execute(runner);
 	}
 	

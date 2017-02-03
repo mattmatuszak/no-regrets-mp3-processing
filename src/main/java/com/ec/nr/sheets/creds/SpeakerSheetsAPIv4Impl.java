@@ -77,9 +77,9 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService, SheetConne
     		
             httpTransport = GoogleNetHttpTransport.newTrustedTransport();
             dataStoreFactory = new FileDataStoreFactory(new File(nrEnvironment.SPREADSHEET_OAUTH2_DIR));
-            //sheetService = getSheetsService();
             
-            //mapFieldToColumnLetter();
+            sheetService = getSheetsService();
+            mapFieldToColumnLetter();
             
         } catch (Throwable t) {
         	System.err.println("problems accessing the spreadsheet...see trace below!!");

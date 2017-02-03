@@ -21,8 +21,8 @@ echo "Target Audio:" $targetAudio
 
 echo ""
 echo "going down to MONO and reducing to a 48 bit rate..."
-lame --mp3input --silent -m m -b 48 $sourceAudio $targetAudio
-echo "Finished going down to MONO and reducing to a 48 buffer rate."
+lame --mp3input --silent -m m -b 64 $sourceAudio $targetAudio
+echo "Finished going down to MONO and reducing to a 64 buffer rate."
 echo ""
 
 exit 0

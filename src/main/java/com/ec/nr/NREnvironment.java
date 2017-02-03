@@ -50,6 +50,9 @@ public class NREnvironment {
 	@Value( "${APP_PRE_EDIT_DIR:" + DEFAULT_DIR + "/post-edit}" )	
 	public String POST_EDIT_DIR;
 	
+	@Value( "${UPLOAD_DIR:" + DEFAULT_DIR + "/upload}" )	
+	public String UPLOAD_DIR;
+	
 	@Value( "${FTP_U:changeme}")			
 	public String FTP_U;
 	@Value( "${FTP_P:changeme}")			
@@ -77,6 +80,7 @@ public class NREnvironment {
 		initDirectory(PRE_EDIT_DIR);
 		initDirectory(USER_EDIT_DIR);
 		initDirectory(POST_EDIT_DIR);
+		initDirectory(UPLOAD_DIR);
 		initDirectory(SPREADSHEET_OAUTH2_DIR);
 		extractScripts();
 		extractData();

@@ -71,7 +71,7 @@ public class LandingPadWatcher extends Thread {
 						String newPathString = newPath.toString();
 						String mp3Name = (newPathString.lastIndexOf("/") > 0) ? newPathString.substring(newPathString.lastIndexOf("/")+1,  newPathString.indexOf(".mp3")) : newPathString.substring(0,  newPathString.indexOf(".mp3"));
 						
-						workQ.addAudio(new NewMP3AudoReceivedRunnable(speakerSpreadsheet, workQ, newPathString, mp3Name));
+						workQ.addAudio(new NewMP3AudoReceivedRunnable(speakerSpreadsheet, workQ, mp3Name));
 						
 						logger.debug("New audio created: " + newPath);
 					} else if (StandardWatchEventKinds.ENTRY_MODIFY == kind) {

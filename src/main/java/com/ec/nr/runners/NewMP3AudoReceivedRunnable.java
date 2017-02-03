@@ -4,26 +4,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ec.nr.sheets.creds.MP3SpreadsheetService;
-import com.ec.nr.sheets.creds.SpreadsheetDataRow;
-import com.ec.nr.sheets.creds.SpreadsheetDataRow.Field;
 import com.ec.nr.workq.WorkQManager;
 
 public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 
 	private Logger logger;
 	
-	private String audioFileReference;
-	
-	public NewMP3AudoReceivedRunnable(MP3SpreadsheetService ss, WorkQManager wqm, String audioFileReference, String audio) {
+	public NewMP3AudoReceivedRunnable(MP3SpreadsheetService ss, WorkQManager wqm, String audio) {
 		super(ss, wqm, audio);
-		this.audioFileReference = audioFileReference;
 		
 		logger = LogManager.getLogger(this.getClass().getSimpleName() + "|" + audio);
 		logger.trace("Landing Pad Runnable Received For:" + audio);
 	}
 	
 
-	@Override
+/*	@Override
 	public void execute() {
 					
 		try {
@@ -33,7 +28,7 @@ public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 			if (data.getFieldValue(Field.MP3_STATE) == null || data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("")
 					|| data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("Not Received")) {
 				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, "Receiving in Progress");
-				Thread.sleep(45000);
+				doWork();
 				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, "Upload Complete");
 			} else {
 				logger.debug("Ignoring MP3:" + getId());
@@ -46,17 +41,27 @@ public class NewMP3AudoReceivedRunnable extends AbstractAudioRunnable {
 		}
 				
 	}
-
+*/
 
 	@Override
-	public String getStatus() {
-		return null;
+	public void doWork() {
+		try {
+			Thread.sleep(45000);
+		} catch (InterruptedException e) {
+			logger.info("Caught error while sleeping on this thread!", e);
+		}
 	}
 
 
 	@Override
-	public String getSpreadsheetDurationField() {
-		return null;
+	public String getStartingStatus() {
+		return "Receiving in Progress";
+	}
+
+
+	@Override
+	public String getEndingStatus() {
+		return "Upload Complete";
 	}
 	
 	

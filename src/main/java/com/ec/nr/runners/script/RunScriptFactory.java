@@ -5,14 +5,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ec.nr.NREnvironment;
+import com.ec.nr.runners.CleanupDirectories;
 import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow;
+import com.ec.nr.workq.WorkQManager;
 
 @Component
 public class RunScriptFactory {
 
 	@Autowired private NREnvironment env;
 	@Autowired private MP3SpreadsheetService spreadsheet;
+	@Autowired private WorkQManager workQ;
 	
 	@Value( "${audio.config.leadin}" )
 	private String LEADIN_FILE_NAME;
@@ -25,7 +28,22 @@ public class RunScriptFactory {
 		switch(status) {
 		
 		// upload complete 
+		
 		case "Upload Complete":
+			return new StraightCopyRunner
+					(
+							new DirectoryInfo(env.LANDING_PAD_DIR, env.LANDING_PAD_ARCHIVE_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo
+							(
+									"copy.sh" 
+									, "Backup Original"
+									, mp3Id
+									, null//" -t " + env.USER_EDIT_DIR + "/" + mp3Id + ".mp3"
+							)
+							, spreadsheet
+					);
+		
+		case "Backup Original Complete":
 			return new ScriptProcessingRunner
 					(
 							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
@@ -34,22 +52,6 @@ public class RunScriptFactory {
 					);
 		
 		case "Convert To Mono Complete":
-			return new ScriptProcessingRunner
-					(
-							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
-							, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null)
-							, spreadsheet
-					);
-			
-		case "Amplify Complete":
-			return new ScriptProcessingRunner
-					(
-							new DirectoryInfo(env.LANDING_PAD_DIR, env.PRE_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
-							, new ScriptInfo("removeSilence.sh", "Remove Silence", mp3Id, null)
-							, spreadsheet
-					);
-		
-		case "Remove Silence Complete":
 			return new CopyRunner
 					(
 							new DirectoryInfo(env.PRE_EDIT_DIR, env.USER_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
@@ -62,12 +64,19 @@ public class RunScriptFactory {
 							)
 							, spreadsheet
 					);
-		
-		case "D":
-		case "d":
+		// After the 'Copy To User Edit Complete', we are assuming the editor will make their changes to the file...so there is a break in this pause
+		case "X":
+		case "x":
 			return new ScriptProcessingRunner
 					(
 							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo("amplify.sh", "Amplify", mp3Id, null)
+							, spreadsheet
+					);
+		case "Amplify Complete":
+			return new ScriptProcessingRunner
+					(
+							new DirectoryInfo(env.POST_EDIT_DIR, env.POST_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
 									"addLeadIn.sh"
@@ -84,7 +93,7 @@ public class RunScriptFactory {
 			
 			return new ScriptProcessingRunner
 					(
-							new DirectoryInfo(env.USER_EDIT_DIR, env.POST_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							new DirectoryInfo(env.POST_EDIT_DIR, env.POST_EDIT_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo
 							(
 								"tagMP3.sh"
@@ -111,15 +120,38 @@ public class RunScriptFactory {
 							)
 							, spreadsheet
 					);
-		
+			
 		case "Copy To Final Complete":
+			
+			SpreadsheetDataRow audioDetailsForUpload = spreadsheet.getAudioDetails(mp3Id);
+			
+			return new CopyWithMeaningfulNameRunner
+					(
+							new DirectoryInfo(env.FINAL_AUDIO_DIR, env.UPLOAD_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
+							, new ScriptInfo
+							(
+									"copy.sh"
+									, "Copy To Upload"
+									, mp3Id
+									, null
+							)
+							, spreadsheet
+							, audioDetailsForUpload.getFieldValue(SpreadsheetDataRow.Field.SEMINAR)
+								+ " - " + audioDetailsForUpload.getFieldValue(SpreadsheetDataRow.Field.SPEAKER)
+								+ " - " + mp3Id
+					);
+		
+		case "Copy To Upload Complete":
 			return new FTPRunner
 					(
 							new DirectoryInfo(env.USER_EDIT_DIR, env.FINAL_AUDIO_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
 							, new ScriptInfo("ftp.sh", "FTP", mp3Id, " -s " + env.FINAL_AUDIO_DIR + "/" + mp3Id + ".mp3")
 							, spreadsheet
 					);
-			
+		
+		case "D":
+		case "d":
+			workQ.addAudio(new CleanupDirectories(spreadsheet, workQ, mp3Id, env));
 		default:
 			return null;
 			
