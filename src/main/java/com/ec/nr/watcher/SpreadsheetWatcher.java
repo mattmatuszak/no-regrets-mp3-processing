@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ec.nr.runners.MP3Runnable;
 import com.ec.nr.runners.script.RunScriptFactory;
-import com.ec.nr.runners.script.ScriptProcessingRunner;
 import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.workq.WorkQManager;
 
@@ -43,7 +43,7 @@ public class SpreadsheetWatcher extends Thread {
 				//if (mp3Status != null && !"".equals(mp3Status))
 				//	logger.trace("mp3 being evaluated:" + mp3 + "|" + mp3Status);
 				
-				ScriptProcessingRunner runner = scriptFactory.getScriptRunner(mp3Status, mp3);
+				MP3Runnable runner = scriptFactory.getScriptRunner(mp3Status, mp3);
 				
 				if (runner != null) {
 					workQ.addAudio(runner);

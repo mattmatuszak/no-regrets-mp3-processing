@@ -18,16 +18,26 @@ public class CleanupDirectories extends AbstractAudioRunnable {
 		super(ss, wqm, audioId);
 		this.env = env;
 	}
+	
+	private void cleanupDirectory(String directory) {
+		Iterator<File> files = 
+				FileUtils.iterateFiles(new File(directory), new WildcardFileFilter("*" + getId() + "*"), null);
+		
+		while (files.hasNext()) {
+			File file = (File) files.next();
+			file.delete();
+		}
+	}
 
 	@Override
 	public void doWork() {
 		
-		//Iterator<File> files = 
-		//		FileUtils.iterateFiles(new File(env.PRE_EDIT_DIR), new WildcardFileFilter("*" + getId() + "*.mp3"), null);
-		
-		//for (File file : files.) {
-			
-		//}
+		cleanupDirectory(env.PRE_EDIT_DIR);
+		cleanupDirectory(env.POST_EDIT_DIR);
+		cleanupDirectory(env.USER_EDIT_DIR);
+		cleanupDirectory(env.LANDING_PAD_DIR);
+		cleanupDirectory(env.LOGS_DIR);
+		cleanupDirectory(env.UPLOAD_DIR);
 		
 		//FileUtils.cleanDirectory(new File(env.PRE_EDIT_DIR));
 

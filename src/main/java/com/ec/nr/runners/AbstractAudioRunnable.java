@@ -45,7 +45,8 @@ public abstract class AbstractAudioRunnable extends AudioRunnersBase implements
 			SpreadsheetDataRow data = getSpeakerSS().getAudioDetails(getId());
 			logger.trace("spreadsheet data row:{}", data);
 			if (data.getFieldValue(Field.MP3_STATE) == null || data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("")
-					|| data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("Not Received")) {
+					|| data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("Not Received")
+					|| data.getFieldValue(Field.MP3_STATE).equalsIgnoreCase("Done")) {
 				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, getStartingStatus());
 				doWork();
 				getSpeakerSS().updateField(getId(), SpreadsheetDataRow.Field.MP3_STATE, getEndingStatus());

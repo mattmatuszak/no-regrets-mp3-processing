@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.ec.nr.NREnvironment;
 import com.ec.nr.runners.CleanupDirectories;
+import com.ec.nr.runners.MP3Runnable;
 import com.ec.nr.sheets.creds.MP3SpreadsheetService;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow;
 import com.ec.nr.workq.WorkQManager;
@@ -23,7 +24,7 @@ public class RunScriptFactory {
 	@Value( "${audio.config.logo}" )
 	private String LOGO_FILE_NAME;
 	
-	public ScriptProcessingRunner getScriptRunner(String status, String mp3Id) {
+	public MP3Runnable getScriptRunner(String status, String mp3Id) {
 		
 		switch(status) {
 		
@@ -149,9 +150,10 @@ public class RunScriptFactory {
 							, spreadsheet
 					);
 		
-		case "D":
-		case "d":
-			workQ.addAudio(new CleanupDirectories(spreadsheet, workQ, mp3Id, env));
+		case "Done":
+		case "done":
+		case "DONE":
+			return new CleanupDirectories(spreadsheet, workQ, mp3Id, env);
 		default:
 			return null;
 			
