@@ -142,14 +142,6 @@ public class RunScriptFactory {
 								+ " - " + mp3Id
 					);
 		
-		case "Copy To Upload Complete":
-			return new FTPRunner
-					(
-							new DirectoryInfo(env.USER_EDIT_DIR, env.FINAL_AUDIO_DIR, env.SCRIPTS_DIR, env.LOGS_DIR)
-							, new ScriptInfo("ftp.sh", "FTP", mp3Id, " -s " + env.FINAL_AUDIO_DIR + "/" + mp3Id + ".mp3")
-							, spreadsheet
-					);
-		
 		case "Done":
 		case "done":
 		case "DONE":
