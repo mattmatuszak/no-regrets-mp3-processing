@@ -11,8 +11,9 @@ docker run \
 -v  /tmp/docker/pre-edit:/tmp/nr/pre-edit \
 -v  /tmp/docker/edit:/tmp/nr/edit \
 -v  /tmp/docker/post-edit:/tmp/nr/post-edit \
+-v  /tmp/docker/upload:/tmp/nr/upload \
 -v  /tmp/nr/spreadsheet/oauth2:/tmp/nr/spreadsheet/oauth2 \
 -v  /home/matt/dev:/tmp/nr/userInfo \
--p 50:8080 -i -t no-regrets-mp3-processing:1.0
+-p 50:8080 -p 55555:55555 -i -t no-regrets-mp3-processing:1.0
 
 exit 0

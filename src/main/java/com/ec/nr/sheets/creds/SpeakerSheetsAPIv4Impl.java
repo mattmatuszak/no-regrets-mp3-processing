@@ -180,8 +180,14 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService, SheetConne
                 .setDataStoreFactory(dataStoreFactory)
                 .setAccessType("offline")
                 .build();
+        
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(55555).build();
+        
         Credential credential = new AuthorizationCodeInstalledApp(
-            flow, new LocalServerReceiver()).authorize("user");
+            flow
+            //, new LocalServerReceiver()
+            ,receiver
+            ).authorize("user");
         System.out.println(
                 "Credentials saved to " + nrEnvironment.SPREADSHEET_OAUTH2_DIR);
         return credential;
