@@ -91,12 +91,12 @@ java -jar ec-no-regrets-app-0.1.0.jar
 ```
 
 
-###*** Enhancements for 2017 ***
-1. 48 ... check for 48 sample rate, and if not downgrade it
-2. Cleanup if we revert...first step to check for pre and post user edit files, and if found delete the files
-3. Have the app check for the dependent directories, and if not found, create the directories rather than having this info in the properties file
+###*** Enhancements for 2018 ***
+1. 48 ... check for 32 sample rate, and if not downgrade it
+2. Debug why failures on scripts are failing
+3. Watchers are breaking their main loop.  enable restarts
 4. fix the profiles...for test, integration test, and live
 5. Add alert or notification when landingpad or spreadsheet watcher terminates and then automatically restart
 6. Update code to use the sox stat command to judge the quality of the audio before and after
-7. Handle blank name in name
 8. Communication errors are breaking the watcher loop
+9. Single-Quotes (':) causing the mp3 taging issues
