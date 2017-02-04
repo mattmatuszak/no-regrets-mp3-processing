@@ -1,10 +1,18 @@
-FROM openjdk:8-jre-alpine
-
+FROM ubuntu
 RUN apt-get update && apt-get install -y \
   lame \
   libmp3lame0 \
   sox \
-  libsox-fmt-mp3
+  libsox-fmt-mp3 \
+  openjdk-8-jre
+  
+#FROM openjdk:8-jre-alpine
+
+#RUN apt-get update && apt-get install -y \
+#  lame \
+#  libmp3lame0 \
+#  sox \
+#  libsox-fmt-mp3
   
 VOLUME /tmp/nr/landingpad
 VOLUME /tmp/nr/landingpad-archive

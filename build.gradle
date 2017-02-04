@@ -18,11 +18,9 @@ apply plugin: 'docker'
 jar {
     baseName = 'ec-no-regrets-app'
     version =  '2017.1.0'
-    manifest {
-        attributes 'Implementation-Title': 'No Regrets MP3 Processor App',
-                   'Implementation-Version': '2017'
-    }
+    
 }
+
 
 repositories {
     mavenCentral()

@@ -50,7 +50,7 @@ public class CleanupDirectories extends AbstractAudioRunnable {
 
 	@Override
 	public String getEndingStatus() {
-		return "Cleaning Up Directories Complete";
+		return "Available To Public";
 	}
 
 }

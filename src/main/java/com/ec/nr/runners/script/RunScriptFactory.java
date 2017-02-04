@@ -132,7 +132,7 @@ public class RunScriptFactory {
 							, new ScriptInfo
 							(
 									"copy.sh"
-									, "Copy To Upload"
+									, "Subsplash Pre-Processing"
 									, mp3Id
 									, null
 							)

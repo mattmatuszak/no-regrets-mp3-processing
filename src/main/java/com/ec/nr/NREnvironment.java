@@ -18,15 +18,15 @@ public class NREnvironment {
 	
 	private static final Logger logger = LogManager.getLogger(NREnvironment.class);
 	
-	private static final String DEFAULT_DIR = "/tmp/nr";
+	private static final String DEFAULT_DIR = "/nr";
 	
 	/**
 	 * also known as upload folder
 	 */
-	@Value( "${MP3_LANDING_PAD_DIR:" + DEFAULT_DIR + "/landingpad}" ) 
+	@Value( "${MP3_LANDING_PAD_DIR:" + DEFAULT_DIR + "/upload}" ) 
 	public String LANDING_PAD_DIR;
 	
-	@Value( "${MP3_LANDING_PAD_ARCHIVE_DIR:" + DEFAULT_DIR + "/landingpad-archive}" ) 
+	@Value( "${MP3_LANDING_PAD_ARCHIVE_DIR:" + DEFAULT_DIR + "/upload_archive}" ) 
 	public String LANDING_PAD_ARCHIVE_DIR;
 
 	@Value( "${APP_SCRIPTS_DIR:" + DEFAULT_DIR + "/scripts}" )		
@@ -38,19 +38,19 @@ public class NREnvironment {
 	@Value( "${APP_DATA_DIR:" + DEFAULT_DIR + "/data}" )			
 	public String DATA_DIR;
 	
-	@Value( "${APP_FINAL_DIR:" + DEFAULT_DIR + "/final}" )			
+	@Value( "${APP_FINAL_DIR:" + DEFAULT_DIR + "/final_archive}" )			
 	public String FINAL_AUDIO_DIR;
 	
 	@Value( "${APP_PRE_EDIT_DIR:" + DEFAULT_DIR + "/pre-edit}" )	
 	public String PRE_EDIT_DIR;
 	
-	@Value( "${APP_EDIT_DIR:" + DEFAULT_DIR + "/edit}" )		
+	@Value( "${APP_EDIT_DIR:" + DEFAULT_DIR + "/editor}" )		
 	public String USER_EDIT_DIR;
 	
 	@Value( "${APP_PRE_EDIT_DIR:" + DEFAULT_DIR + "/post-edit}" )	
 	public String POST_EDIT_DIR;
 	
-	@Value( "${UPLOAD_DIR:" + DEFAULT_DIR + "/upload}" )	
+	@Value( "${UPLOAD_DIR:" + DEFAULT_DIR + "/final}" )	
 	public String UPLOAD_DIR;
 	
 	@Value( "${FTP_U:changeme}")			
@@ -59,7 +59,7 @@ public class NREnvironment {
 	public String FTP_P;
 	
 	
-	@Value("${SPREADSHEET_OAUTH2_DIR:" + DEFAULT_DIR + "/spreadsheet/oauth2}")
+	@Value("${SPREADSHEET_OAUTH2_DIR:" + DEFAULT_DIR + "/oauth2}")
 	public String SPREADSHEET_OAUTH2_DIR;
 	
 	@Value("${SPREADSHEET_OAUTH2_USER_INFO_DIR:" + DEFAULT_DIR + "/userInfo}")
