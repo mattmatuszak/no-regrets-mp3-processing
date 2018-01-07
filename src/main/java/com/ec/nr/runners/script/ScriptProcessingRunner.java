@@ -35,11 +35,11 @@ public class ScriptProcessingRunner implements Runnable, MP3Runnable {
 		updateStatus(this.scriptInfo.getScriptAliasName() + " Queued");
 	}
 	
-	private void updateStatus(String value) {
+	protected void updateStatus(String value) {
 		spreadsheetService.updateField(this.getId(), SpreadsheetDataRow.Field.MP3_STATE, value);
 	}
 	
-	private void updateDuration(Long duration) {
+	protected void updateDuration(Long duration) {
 		
 		Field field = Field.fromUserFriendlyName(this.getScriptInfo().getScriptAliasName());
 		if (field != null)
