@@ -59,9 +59,9 @@ dependencies {
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.0'
   	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.0'
   	
-  	compile 'com.google.api-client:google-api-client:1.22.0'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
-    compile 'com.google.apis:google-api-services-sheets:v4-rev38-1.22.0'
+  	compile 'com.google.api-client:google-api-client:1.23.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+    compile 'com.google.apis:google-api-services-sheets:v4-rev496-1.23.0'
 
 	// tag::jetty[]
     compile("org.springframework.boot:spring-boot-starter-web") {
@@ -83,8 +83,8 @@ dependencies {
     compile ('commons-io:commons-io:2.5')
     
     // https://mvnrepository.com/artifact/junit/junit
-	testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+	//testCompile group: 'junit', name: 'junit', version: '4.12'
+    //testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
 

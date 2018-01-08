@@ -18,7 +18,7 @@ public class NREnvironment {
 	
 	private static final Logger logger = LogManager.getLogger(NREnvironment.class);
 	
-	private static final String DEFAULT_DIR = "/nr";
+	private static final String DEFAULT_DIR = "/home/matt/dev/temp/nr";
 	
 	/**
 	 * also known as upload folder
@@ -67,6 +67,9 @@ public class NREnvironment {
 	
 	@Value("${SPREADSHEET_OAUTH2_USER_INFO_NAME:userInfo.json}")
 	public String SPREADSHEET_OAUTH2_USER_NAME;
+	
+	@Value("${SPREADSHEET_SERVICE_ACCOUNT_JSON:serviceAccount.json}")
+	public String SPREADSHEET_SERVICE_ACCOUNT_JSON;
 	
 	
 	@PostConstruct

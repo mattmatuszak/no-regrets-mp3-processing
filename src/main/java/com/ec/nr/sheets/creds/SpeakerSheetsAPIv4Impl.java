@@ -1,12 +1,11 @@
 package com.ec.nr.sheets.creds;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,20 +20,14 @@ import org.springframework.stereotype.Service;
 
 import com.ec.nr.NREnvironment;
 import com.ec.nr.sheets.creds.SpreadsheetDataRow.Field;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
@@ -54,7 +47,6 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService, SheetConne
 
 	@Autowired private NREnvironment nrEnvironment;
 	
-    private FileDataStoreFactory dataStoreFactory;
     private HttpTransport httpTransport;
     private Sheets sheetService;
     
@@ -76,7 +68,6 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService, SheetConne
     		logger.info("sheet.range.all:{}", allRange);
     		
             httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-            dataStoreFactory = new FileDataStoreFactory(new File(nrEnvironment.SPREADSHEET_OAUTH2_DIR));
             
             sheetService = getSheetsService();
             mapFieldToColumnLetter();
@@ -131,68 +122,20 @@ public class SpeakerSheetsAPIv4Impl implements MP3SpreadsheetService, SheetConne
     }
     
     private Sheets getSheetsService() throws IOException {
-        Credential credential = authorizeViaConsole();
+        Credential credential = authorizedServiceAccount();
         return new Sheets.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(applicationName)
                 .build();
     }
     
-    
-    private Credential authorizeViaSomethingElse(String authCode) throws IOException {
+    private Credential authorizedServiceAccount() throws IOException {
     	// Load client secrets.
-        InputStream in = new FileInputStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO_DIR + "/" + nrEnvironment.SPREADSHEET_OAUTH2_USER_NAME);
-            //SpeakerSheetsAPIv4Impl.class.getResourceAsStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO);
-        GoogleClientSecrets clientSecrets =
-            GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-        
-    	GoogleTokenResponse tokenResponse =
-    	          new GoogleAuthorizationCodeTokenRequest(
-    	              new NetHttpTransport(),
-    	              JacksonFactory.getDefaultInstance(),
-    	              "https://www.googleapis.com/oauth2/v4/token",
-    	              clientSecrets.getDetails().getClientId(),
-    	              clientSecrets.getDetails().getClientSecret(),
-    	              authCode,
-    	              "")  // Specify the same redirect URI that you use with your web
-    	                             // app. If you don't have a web version of your app, you can
-    	                             // specify an empty string.
-    	              .execute();
-
-    	String accessToken = tokenResponse.getAccessToken();
-
-    	// Use access token to call API
-    	GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-    	return credential;
-    }
-    
-    
-    private Credential authorizeViaConsole() throws IOException {
-        // Load client secrets.
-        InputStream in = new FileInputStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO_DIR + "/" + nrEnvironment.SPREADSHEET_OAUTH2_USER_NAME);
-            //SpeakerSheetsAPIv4Impl.class.getResourceAsStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO);
-        GoogleClientSecrets clientSecrets =
-            GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow =
-                new GoogleAuthorizationCodeFlow.Builder(
-                        httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(dataStoreFactory)
-                .setAccessType("offline")
-                .build();
-        
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(55555).build();
-        
-        Credential credential = new AuthorizationCodeInstalledApp(
-            flow
-            //, new LocalServerReceiver()
-            ,receiver
-            ).authorize("user");
-        System.out.println(
-                "Credentials saved to " + nrEnvironment.SPREADSHEET_OAUTH2_DIR);
+    	InputStream in = new FileInputStream(nrEnvironment.SPREADSHEET_OAUTH2_USER_INFO_DIR + "/" + nrEnvironment.SPREADSHEET_SERVICE_ACCOUNT_JSON);
+    	GoogleCredential credential = GoogleCredential.fromStream(in)
+    		    .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS));
         return credential;
     }
-	
+
 	private int getRowForMP3(String id) {
 		try {
 			ValueRange response = sheetService.spreadsheets().values()
