@@ -19,7 +19,17 @@ Now for the technical stuff that this project depends on and how we use it.
 
 ###To follow the above process, we need to setup our server correctly, so here we go (assuming you are running ubuntu server):
 
-####Note: I've containerized this app with docker to reduce most of the config below, but no time to update the instructions below.  When I get a chance before Feb 4, 2017, I will.
+####Note: I've containerized this app with docker to reduce most of the config below, but no time to update the instructions below.  When I get a chance before Feb 3, 2018, I will.
+
+Few notes about the containerized app:
+
+1. view the Dockerfile
+1. the image is available on [matt matuszak docker hub](https://hub.docker.com/r/mattmatuszak/nr-mp3-processing)
+1. you can build the app locally using the build.sh
+1. you can run the app locally by using the run.sh
+
+
+Rest of the notes...
 
 - [Lame Setup Reference](http://wiki.audacityteam.org/wiki/Lame_Installation)<br />
 ```
@@ -100,3 +110,14 @@ java -jar ec-no-regrets-app-0.1.0.jar
 6. Update code to use the sox stat command to judge the quality of the audio before and after
 8. Communication errors are breaking the watcher loop
 9. Single-Quotes (':) causing the mp3 taging issues
+
+
+### Flow Notes 
+1. Upload > copied to upload archive for safe keeping
+1. Upload > pre-edit - converted to mono
+1. pre-edit > editor - copied
+1. editor > post-edit - amplified
+1. post-edit > post-edit - add lead in
+1. post-edit > post-edit - add mp3 tags
+1. post-edit > final_archive - copied
+1. final_archive > upload - copied

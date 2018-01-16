@@ -18,7 +18,7 @@ public class NREnvironment {
 	
 	private static final Logger logger = LogManager.getLogger(NREnvironment.class);
 	
-	private static final String DEFAULT_DIR = "/home/matt/dev/temp/nr";
+	private static final String DEFAULT_DIR = "/temp/nr";
 	
 	/**
 	 * also known as upload folder
