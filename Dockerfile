@@ -20,6 +20,7 @@ VOLUME /temp/nr/scripts
 VOLUME /temp/nr/upload
 VOLUME /temp/nr/upload_archive
 VOLUME /temp/nr/userInfo
+VOLUME /temp/nr/config
 
 ADD build/libs/ec-no-regrets-app-2017.1.0.jar ec-no-regrets-app.jar
 
@@ -27,4 +28,4 @@ RUN sh -c 'touch /ec-no-regrets-app.jar'
 
 ENV JAVA_OPTS=""
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /ec-no-regrets-app.jar" ]
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /ec-no-regrets-app.jar --spring.config.location=file:/temp/nr/config/application.properties" ]

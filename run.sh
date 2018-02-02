@@ -16,6 +16,7 @@ docker run \
 -v /home/matt/dev/temp/nr/upload:/temp/nr/upload \
 -v /home/matt/dev/temp/nr/upload_archive:/temp/nr/upload_archive \
 -v /home/matt/dev/temp/nr/userInfo:/temp/nr/userInfo \
+-v /home/matt/dev/temp/nr/config:/temp/nr/config \
 --name mm-nr-mp3-processing \
 -p 8080:8080 -t mattmatuszak/nr-mp3-processing:latest
 

@@ -12,6 +12,6 @@ else
 fi
 
 
-docker build -t mattmatuszak/nr-mp3-processing:latest -t  mattmatuszak/nr-mp3-processing:1.0.0 .
+docker build -t mattmatuszak/nr-mp3-processing:latest -t  mattmatuszak/nr-mp3-processing:1.0.1 .
 
 exit 0

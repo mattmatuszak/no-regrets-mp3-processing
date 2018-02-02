@@ -53,6 +53,9 @@ public class NREnvironment {
 	@Value( "${UPLOAD_DIR:" + DEFAULT_DIR + "/final}" )	
 	public String UPLOAD_DIR;
 	
+	@Value( "${CONFIG_DIR:" + DEFAULT_DIR + "/config}" )	
+	public String CONFIG_DIR;
+	
 	@Value( "${FTP_U:changeme}")			
 	public String FTP_U;
 	@Value( "${FTP_P:changeme}")			
@@ -85,6 +88,7 @@ public class NREnvironment {
 		initDirectory(POST_EDIT_DIR);
 		initDirectory(UPLOAD_DIR);
 		initDirectory(SPREADSHEET_OAUTH2_DIR);
+		initDirectory(CONFIG_DIR);
 		extractScripts();
 		extractData();
 	}

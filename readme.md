@@ -27,6 +27,7 @@ Few notes about the containerized app:
 1. the image is available on [matt matuszak docker hub](https://hub.docker.com/r/mattmatuszak/nr-mp3-processing)
 1. you can build the app locally using the build.sh
 1. you can run the app locally by using the run.sh
+1. i've added override capabilities for spreadsheet configuration...so if you want to switch up the sheet reference the name of the image, go ahead and add a properties file in /config or wherever you have it mounted.  See the [Dockerfile](https://github.com/mattmatuszak/no-regrets-mp3-processing/blob/master/Dockerfile) and [run.sh](https://github.com/mattmatuszak/no-regrets-mp3-processing/blob/master/run.sh) for reference
 
 
 Rest of the notes...
@@ -83,7 +84,7 @@ mkdir lib
 ```
 - Setup the properties file in src/main/resources/nr.properties
    Point to the directories created above
-   Update the number of threads to the number of cores - 1 
+   Update the number of threads to the number of cores - 1
 - Copy the Google Java files to the lib directory
    http://mvnrepository.com/artifact/com.google.gdata/core/1.47.1
    NOTE: Should look into this as opposed to using the old jars: https://github.com/google/google-api-java-client (the above seems to be required - at least for this code)
@@ -112,7 +113,7 @@ java -jar ec-no-regrets-app-0.1.0.jar
 9. Single-Quotes (':) causing the mp3 taging issues
 
 
-### Flow Notes 
+### Flow Notes
 1. Upload > copied to upload archive for safe keeping
 1. Upload > pre-edit - converted to mono
 1. pre-edit > editor - copied
